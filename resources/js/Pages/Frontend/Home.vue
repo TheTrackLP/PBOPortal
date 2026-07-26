@@ -1,74 +1,23 @@
+<script>
+import AppLayout from "@/Layouts/Frontend/AppLayout.vue";
+export default {
+    layout: AppLayout,
+};
+</script>
+
+<style scoped>
+img {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+    margin: 0 auto 0.5rem;
+}
+.card {
+    border: 0px !important;
+}
+</style>
 <template>
-    <body>
-        <!-- Topbar -->
-        <div class="topbar py-1">
-            <div
-                class="container d-flex justify-content-between align-items-center flex-wrap"
-            >
-                <div>
-                    <span class="me-3"
-                        ><i class="fa-solid fa-phone"></i>(036) 000-0000</span
-                    >
-                    <span
-                        ><i class="fa-solid fa-envelope"></i>
-                        oca@example.gov.ph</span
-                    >
-                </div>
-                <div
-                    class="small text-uppercase"
-                    style="letter-spacing: 0.04em; opacity: 0.8"
-                >
-                    Republic of the Philippines
-                </div>
-            </div>
-        </div>
-
-        <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg navbar-office py-3">
-            <div class="container">
-                <a class="navbar-brand" href="#">
-                    <div class="brand-seal">O</div>
-                    <span class="brand-text">
-                        <strong class="font-display text-white"
-                            >Provincial Budget Office</strong
-                        >
-                        <small>Provincial Capitol, Roxas City, Capiz</small>
-                    </span>
-                </a>
-                <button
-                    class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#mainNav"
-                >
-                    <i class="fa-solid fa-bars text-white"></i>
-                </button>
-                <div class="collapse navbar-collapse" id="mainNav">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Staff</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Services</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">News</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Contact</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <!-- 1. HERO -->
+    <AppLayout>
         <section class="hero">
             <div class="container position-relative">
                 <h1 class="font-display fw-bold">Provincial Budget Office</h1>
@@ -79,7 +28,7 @@
             </div>
         </section>
         <section class="py-5">
-            <div class="container-fluid">
+            <div class="container">
                 <div class="row g-4">
                     <div class="col-md-4">
                         <div class="card">
@@ -153,41 +102,58 @@
                     <div class="section-eyebrow">What We Offer</div>
                     <h2 class="font-display section-title">Our Services</h2>
                 </div>
-                <div class="row g-4">
-                    <div class="col-md-4">
-                        <div class="service-card">
-                            <div class="service-icon">
-                                <i class="bi bi-file-earmark-text"></i>
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    <div class="col services-hover">
+                        <div class="card">
+                            <img
+                                src="/img/no-image.jpg"
+                                class="card-img-top"
+                                alt="..."
+                            />
+                            <div class="card-body">
+                                <h5 class="card-title">Card title</h5>
+                                <p class="text-secondary">
+                                    This is a longer card with supporting text
+                                    below as a natural lead-in to additional
+                                    content. This content is a little bit
+                                    longer.
+                                </p>
                             </div>
-                            <h6 class="fw-bold">Permits & Clearances</h6>
-                            <p class="text-secondary small mb-0">
-                                Processing of business permits, clearances, and
-                                administrative documents.
-                            </p>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="service-card">
-                            <div class="service-icon">
-                                <i class="bi bi-people"></i>
+                    <div class="col services-hover">
+                        <div class="card">
+                            <img
+                                src="/img/no-image.jpg"
+                                class="card-img-top"
+                                alt="..."
+                            />
+                            <div class="card-body">
+                                <h5 class="card-title">Card title</h5>
+                                <p class="text-secondary">
+                                    This is a longer card with supporting text
+                                    below as a natural lead-in to additional
+                                    content.
+                                </p>
                             </div>
-                            <h6 class="fw-bold">Public Assistance</h6>
-                            <p class="text-secondary small mb-0">
-                                Front-line assistance desk for resident concerns
-                                and inquiries.
-                            </p>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="service-card">
-                            <div class="service-icon">
-                                <i class="bi bi-clipboard-data"></i>
+                    <div class="col services-hover">
+                        <div class="card">
+                            <img
+                                src="/img/no-image.jpg"
+                                class="card-img-top"
+                                alt="..."
+                            />
+                            <div class="card-body">
+                                <h5 class="card-title">Card title</h5>
+                                <p class="text-secondary">
+                                    This is a longer card with supporting text
+                                    below as a natural lead-in to additional
+                                    content. This content is a little bit
+                                    longer.
+                                </p>
                             </div>
-                            <h6 class="fw-bold">Records Management</h6>
-                            <p class="text-secondary small mb-0">
-                                Maintenance and release of official
-                                administrative records.
-                            </p>
                         </div>
                     </div>
                 </div>
@@ -297,40 +263,5 @@
                 <a href="#" class="btn btn-dark px-4">Get in Touch</a>
             </div>
         </section>
-        <footer class="footer-office">
-            <div class="container py-5">
-                <div class="row g-4">
-                    <div class="col-md-4">
-                        <h6 class="font-display mb-3">
-                            Provincial Budget Office
-                        </h6>
-                        <p class="text-muted-light mb-1">
-                            Provincial Capitol, Roxas City, Capiz
-                        </p>
-                        <p class="text-muted-light mb-1">(036) 000-0000</p>
-                        <p class="text-muted-light mb-0">oca@example.gov.ph</p>
-                    </div>
-                    <div class="col-md-4">
-                        <h6 class="font-display mb-3">Quick Links</h6>
-                        <ul class="list-unstyled">
-                            <li class="mb-2"><a href="#">Home</a></li>
-                            <li class="mb-2"><a href="#">About</a></li>
-                            <li class="mb-2"><a href="#">Staff</a></li>
-                            <li class="mb-2"><a href="#">Services</a></li>
-                            <li class="mb-2"><a href="#">News</a></li>
-                            <li class="mb-0"><a href="#">Contact</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4">
-                        <h6 class="font-display mb-3">Office Hours</h6>
-                        <p class="text-muted-light mb-1">Monday – Friday</p>
-                        <p class="text-muted-light mb-0">8:00 AM – 5:00 PM</p>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom text-center py-3">
-                &copy; 2026 Provincial Budget Office. All rights reserved.
-            </div>
-        </footer>
-    </body>
+    </AppLayout>
 </template>
