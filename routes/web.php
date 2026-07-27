@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Frontend\AboutController;
 use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\Frontend\StaffController;
@@ -12,3 +13,5 @@ Route::group([], function() {
     Route::get('/staff', [StaffController::class, 'StaffIndex'])->name('staff');
     Route::get('/contact-us', [ContactController::class, 'ContactIndex'])->name('contact');
 });
+
+Route::get('/admin', [AdminController::class, 'AdminDashboard'])->name('admin.dash');
