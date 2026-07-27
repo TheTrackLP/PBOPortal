@@ -1,3 +1,4 @@
+
 <script>
 import AppLayout from "@/Layouts/Frontend/AppLayout.vue";
 export default {
@@ -184,11 +185,10 @@ img {
                             <div class="p-3">
                                 <div class="news-date">July 20, 2026</div>
                                 <h6 class="fw-bold mt-1">
-                                    New Online Permit Application Now Live
+                                    Example
                                 </h6>
                                 <p class="text-secondary small mb-0">
-                                    Residents can now file business permit
-                                    applications online through the new portal.
+                                    Example
                                 </p>
                             </div>
                         </div>
@@ -199,11 +199,10 @@ img {
                             <div class="p-3">
                                 <div class="news-date">July 12, 2026</div>
                                 <h6 class="fw-bold mt-1">
-                                    Office Hours Update for August
+                                    Example
                                 </h6>
                                 <p class="text-secondary small mb-0">
-                                    Adjusted hours during the city's founding
-                                    anniversary celebration.
+                                    Example.
                                 </p>
                             </div>
                         </div>
@@ -214,11 +213,10 @@ img {
                             <div class="p-3">
                                 <div class="news-date">July 3, 2026</div>
                                 <h6 class="fw-bold mt-1">
-                                    Public Consultation on Barangay Services
+                                    Example
                                 </h6>
                                 <p class="text-secondary small mb-0">
-                                    An open forum for residents to voice
-                                    concerns on administrative services.
+                                    Example.
                                 </p>
                             </div>
                         </div>
@@ -234,12 +232,7 @@ img {
                     <div class="spotlight-photo flex-shrink-0">
                         <i class="bi bi-person-fill"></i>
                     </div>
-                    <div class="text-center">
-                        <blockquote class="mb-2">
-                            "Our commitment is to serve every resident with
-                            transparency, efficiency, and genuine care for our
-                            community."
-                        </blockquote>
+                    <div class="">
                         <div class="fw-bold">ATTY. KAREN L. LIPARDO</div>
                         <div class="text-secondary small">
                             ACTING PROVINCIAL BUDGET OFFICER
