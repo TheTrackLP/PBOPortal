@@ -31,8 +31,11 @@ const page = usePage();
     <nav class="navbar navbar-expand-lg navbar-office py-3">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <div class="brand-seal">O</div>
-                <span class="brand-text">
+                    <img
+                        src="/img/capiz-logo.png"
+                        class="brand-seal"
+                        alt="..."
+                    />                <span class="brand-text">
                     <strong class="font-display text-white"
                         >Provincial Budget Office</strong
                     >
@@ -80,7 +83,10 @@ const page = usePage();
                         <a class="nav-link" href="#">News</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>
+                        <Link class="nav-link"
+                            :class="{ active: page.url.startsWith('/contact-us') }"
+                            :href="route('contact')"
+                            >Contact Us</Link>
                     </li>
                 </ul>
             </div>

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Backend\AdminController;
+use App\Http\Controllers\Backend\DivisionController;
+use App\Http\Controllers\Backend\StaffController as BackendStaffController;
 use App\Http\Controllers\Frontend\AboutController;
 use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\Frontend\StaffController;
@@ -14,4 +16,15 @@ Route::group([], function() {
     Route::get('/contact-us', [ContactController::class, 'ContactIndex'])->name('contact');
 });
 
-Route::get('/admin', [AdminController::class, 'AdminDashboard'])->name('admin.dash');
+Route::group([], function(){
+    Route::get('/admin', [AdminController::class, 'AdminDashboard'])->name('admin.dash');
+    Route::controller(BackendStaffController::class)->group(function(){
+        Route::get('/admin/staff', 'BackStaffIndex')->name('admin.staff');
+        Route::post('/admin/staff/add', 'AddStaff')->name('staff.store');
+    });
+
+    Route::controller(DivisionController::class)->group(function(){
+        Route::get('/admin/division', 'divisionIndex')->name('admin.div');
+        Route::post('/admin/division/add', 'divisionAdd')->name('div.add');
+    });
+});

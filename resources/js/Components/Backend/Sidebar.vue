@@ -1,3 +1,8 @@
+<script setup>
+import { Link, usePage } from "@inertiajs/vue3";
+const page = usePage();
+</script>
+
 <template>
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
@@ -10,16 +15,28 @@
 
         <div>
             <div class="sidebar-section-label">Overview</div>
-            <a href="#" class="nav-link-custom active"
-                ><i class="fa-solid fa-gauge"></i> Dashboard</a
+            <Link
+                :class="{ active: page.url === '/admin' }"
+                :href="route('admin.dash')"
+                class="nav-link-custom"
+                ><i class="fa-solid fa-gauge"></i> Dashboard</Link
             >
             <div class="sidebar-section-label">Content</div>
             <a href="#" class="nav-link-custom"
                 ><i class="fa-solid fa-newspaper"></i> News &amp;
                 Announcements</a
             >
-            <a href="#" class="nav-link-custom"
-                ><i class="fa-solid fa-users"></i> Staff Directory</a
+            <Link
+                :class="{ active: page.url.startsWith('/admin/staff') }"
+                :href="route('admin.staff')"
+                class="nav-link-custom"
+                ><i class="fa-solid fa-users"></i> Staff Directory</Link
+            >
+            <Link
+                :class="{ active: page.url.startsWith('/admin/division') }"
+                :href="route('admin.div')"
+                class="nav-link-custom"
+                ><i class="fa-solid fa-building"></i> Division</Link
             >
             <a href="#" class="nav-link-custom"
                 ><i class="fa-solid fa-toolbox"></i> Services</a

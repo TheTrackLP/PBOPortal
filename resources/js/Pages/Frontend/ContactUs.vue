@@ -75,11 +75,15 @@ li {
                     </ul>
                 </div>
                 <div class="col-md-6 d-flex align-items-center">
-                    <img
-                        src="img/new-capitol.jpg"
-                        alt="Capiz Provincial Seal"
-                        class="contact-img"
-                    />
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d581.0116852876965!2d122.75354856254049!3d11.582999611561844!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33a5f2f04fff0d45%3A0xd1dbe4fefc632fd!2sCapiz%20Provincial%20Capitol!5e0!3m2!1sen!2sph!4v1785288588668!5m2!1sen!2sph"
+                        width="1000"
+                        height="600"
+                        style="border: 0"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                    ></iframe>
                 </div>
             </div>
         </div>

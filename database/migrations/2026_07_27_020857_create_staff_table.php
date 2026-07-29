@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('staff', function (Blueprint $table) {
             $table->id();
-            $table->string('staff_name')->nullable();
-            $table->string('staff_position')->nullable();
-            $table->string('staff_designation')->nullable();
-            $table->string('staff_photo')->nullable();
+            $table->string('name')->nullable();
+            $table->string('position')->nullable();
+            $table->string('designation')->nullable();
+            $table->string('photo')->nullable();
             $table->integer('order')->nullable();
             $table->integer('divisionid')->nullable();
-            $table->tinyInteger('isActive')->nullable();
+            $table->tinyInteger('isActive')->default(1);
             $table->timestamps();
         });
     }
