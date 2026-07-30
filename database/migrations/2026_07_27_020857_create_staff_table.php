@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->integer('order')->nullable();
             $table->integer('divisionid')->nullable();
+            $table->enum('category', ['head', 'acting_head', 'staff'])->nullable();
             $table->tinyInteger('isActive')->default(1);
             $table->timestamps();
         });

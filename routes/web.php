@@ -23,6 +23,7 @@ Route::group([], function(){
         Route::post('/admin/staff/add', 'AddStaff')->name('staff.store');
         Route::post('/admin/staff/update/{id}', 'UpdateStaff')->name('staff.update');
         Route::post('/admin/staff/order/update', 'staffOrder')->name('staff.update.order');
+        Route::post('/admin/staff/status-update/{id}', 'changeStaffStatus')->name('staff.status');
     });
 
     Route::controller(DivisionController::class)->group(function(){

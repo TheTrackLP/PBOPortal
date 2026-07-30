@@ -1,5 +1,20 @@
 <script setup>
+import { ref, computed } from "vue";
+
+const selectedDivision = ref("all");
+
+const filteredStaff = computed(() => {
+    if (selectedDivision.value === "all") {
+        return props.staffs;
+    }
+    return props.staffs.filter((s) => s.divisionid === selectedDivision.value);
+});
+function selectDivision(id) {
+    selectedDivision.value = id;
+}
+
 const props = defineProps({
+    leadership: Array,
     staffs: Array,
     divisions: Array,
 });
@@ -14,8 +29,8 @@ export default {
 </script>
 <style scoped>
 img {
-    width: 250px;
-    height: 250px;
+    width: 200px;
+    height: 200px;
     object-fit: cover;
     margin: 0 auto 0.5rem;
 }
@@ -61,7 +76,11 @@ img {
         </section>
         <section class="py-5">
             <div class="container">
-                <div class="card mb-3">
+                <div
+                    class="card mb-3"
+                    v-for="(lead, index) in leadership"
+                    :key="index"
+                >
                     <div class="row g-0">
                         <div class="col-md-4">
                             <div class="profile-section">
@@ -70,32 +89,14 @@ img {
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
+                                <h5 class="card-title">{{ lead.name }}</h5>
                                 <p class="card-text">
-                                    This is a wider card with supporting text
-                                    below as a natural lead-in to additional
-                                    content. This content is a little bit
-                                    longer.
+                                    {{ lead.position }}
                                 </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card mb-3">
-                    <div class="row g-0">
-                        <div class="col-md-4">
-                            <div class="profile-section">
-                                <img src="/img/no-image.jpg" />
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
                                 <p class="card-text">
-                                    This is a wider card with supporting text
-                                    below as a natural lead-in to additional
-                                    content. This content is a little bit
-                                    longer.
+                                    {{
+                                        lead.designation ? lead.designation : ""
+                                    }}
                                 </p>
                             </div>
                         </div>
@@ -106,13 +107,17 @@ img {
         <section class="pb-5">
             <div class="container">
                 <div class="filter-pills float-end">
-                    <span class="filter-pill active">All</span>
-                    <span
+                    <button @click="selectDivision('all')" class="filter-pill">
+                        All
+                    </button>
+                    <button
                         class="filter-pill"
                         v-for="(div, index) in divisions"
                         :key="index"
-                        >{{ div.name }}</span
+                        @click="selectDivision(div.id)"
                     >
+                        {{ div.name }}
+                    </button>
                 </div>
                 <h2 class="font-display" style="font-size: 1.6rem">
                     Staff Directory
@@ -122,7 +127,11 @@ img {
         <section class="pb-5">
             <div class="container">
                 <div class="row row-cols-1 row-cols-md-3 g-4">
-                    <div class="col" v-for="n in 10">
+                    <div
+                        class="col"
+                        v-for="(staff, index) in filteredStaff"
+                        :key="index"
+                    >
                         <div class="card">
                             <img
                                 src="/img/no-image.jpg"
@@ -130,12 +139,16 @@ img {
                                 alt="..."
                             />
                             <div class="card-body text-center">
-                                <h5 class="card-title">Card title</h5>
+                                <h5 class="card-title">{{ staff.name }}</h5>
                                 <p class="card-text">
-                                    This is a longer card with supporting text
-                                    below as a natural lead-in to additional
-                                    content. This content is a little bit
-                                    longer.
+                                    {{ staff.position }}
+                                </p>
+                                <p class="card-text">
+                                    {{
+                                        staff.designation
+                                            ? staff.designation
+                                            : ""
+                                    }}
                                 </p>
                             </div>
                         </div>

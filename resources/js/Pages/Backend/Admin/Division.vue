@@ -5,7 +5,11 @@ const diviForm = useForm({
 });
 
 const submitDiv = () => {
-    diviForm.post(route("div.add"));
+    diviForm.post(route("div.add"), {
+        onSuccess: () => {
+            diviForm.reset();
+        },
+    });
 };
 
 const props = defineProps({

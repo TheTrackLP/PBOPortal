@@ -55,6 +55,10 @@ const submitStaff = () => {
     }
 };
 
+const changeStatus = (staff) => {
+    staffForm.post(route("staff.status", staff.id));
+};
+
 const props = defineProps({
     staffs: Array,
     divisions: Array,
@@ -294,6 +298,7 @@ export default {
                                                 <button
                                                     type="button"
                                                     class="btn btn-danger"
+                                                    @click="changeStatus(staff)"
                                                     v-if="staff.isActive === 0"
                                                 >
                                                     <i
@@ -303,6 +308,7 @@ export default {
                                                 <button
                                                     type="button"
                                                     class="btn btn-success"
+                                                    @click="changeStatus(staff)"
                                                     v-else-if="
                                                         staff.isActive === 1
                                                     "

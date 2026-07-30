@@ -15,7 +15,7 @@ watch(
                 title: "Success!",
                 text: value,
                 icon: "success",
-                timer: 2000,
+                timer: 1500,
                 showConfirmButton: false,
             });
         }
@@ -31,7 +31,7 @@ watch(
                 title: "Error!",
                 text: value,
                 icon: "error",
-                timer: 2000,
+                timer: 1500,
                 showConfirmButton: false,
             });
         }

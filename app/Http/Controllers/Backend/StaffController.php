@@ -16,7 +16,7 @@ class StaffController extends Controller
             'staff.*',
             'divisions.name as divname'
         )
-        ->join('divisions', 'divisions.id', '=', 'staff.divisionid')
+        ->leftJoin('divisions', 'divisions.id', '=', 'staff.divisionid')
         ->orderBy('staff.order', 'asc')
         ->get();
         return inertia('Backend/Admin/Staffs', [
@@ -29,8 +29,6 @@ class StaffController extends Controller
         $valid = Validator::make($request->all(), [
             'name' => 'required',
             'position' => 'required',
-            'designation' => 'required',
-            'divisionid' => 'required',
         ]);
 
         if($valid->fails()){
@@ -106,6 +104,24 @@ class StaffController extends Controller
         ]);
         return redirect()->route('admin.staff')->with(
             'success', 'Updated Staff Success!',
+        );
+    }
+
+    public function changeStaffStatus($id){
+        $staff_id = Staff::findorfail($id);
+
+        if($staff_id->isActive == 1){
+            $staff_id->update([
+                'isActive' => 0
+            ]);
+        } elseif ($staff_id->isActive == 0){
+            $staff_id->update([
+                'isActive' => 1
+            ]);
+        }
+
+        return redirect()->route('admin.staff')->with(
+            'success', 'Status Change',
         );
     }
 
