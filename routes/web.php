@@ -21,6 +21,8 @@ Route::group([], function(){
     Route::controller(BackendStaffController::class)->group(function(){
         Route::get('/admin/staff', 'BackStaffIndex')->name('admin.staff');
         Route::post('/admin/staff/add', 'AddStaff')->name('staff.store');
+        Route::post('/admin/staff/update/{id}', 'UpdateStaff')->name('staff.update');
+        Route::post('/admin/staff/order/update', 'staffOrder')->name('staff.update.order');
     });
 
     Route::controller(DivisionController::class)->group(function(){

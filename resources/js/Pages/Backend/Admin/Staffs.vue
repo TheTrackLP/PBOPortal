@@ -1,6 +1,7 @@
 <script setup>
-import { useForm } from "@inertiajs/vue3";
-import { computed, ref } from "vue";
+import { router, useForm } from "@inertiajs/vue3";
+import { computed, ref, watch } from "vue";
+import draggable from "vuedraggable";
 
 const staffFormMode = ref("create");
 const staffForm = useForm({
@@ -29,25 +30,56 @@ const staffDate = (staff) => {
     staffForm.name = staff.name;
     staffForm.position = staff.position;
     staffForm.designation = staff.designation;
-    staffForm.photo = staff.photo;
+    staffForm.divisionid = staff.divisionid;
+    previewPhotoFile.value = staff.photo;
 };
 
-const displayPhoto = computed(() => {
-    if (previewPhotoFile.value) return previewPhotoFile.value;
-    if (typeof staffForm.photo === "string" && staffForm.photo) {
-        return `/${staffForm.photo}`;
-    }
-    return null;
-});
-
 const submitStaff = () => {
-    staffForm.post(route("staff.store"));
+    if (staffFormMode.value === "create") {
+        staffForm.post(route("staff.store"), {
+            preserveScroll: true,
+            onSuccess: () => {
+                staffForm.reset();
+                previewPhotoFile.value = null;
+            },
+        });
+    } else {
+        staffForm.post(route("staff.update", staffForm.id), {
+            preserveScroll: true,
+            onSuccess: () => {
+                staffForm.reset();
+                previewPhotoFile.value = null;
+                staffFormMode.value = "create";
+            },
+        });
+    }
 };
 
 const props = defineProps({
     staffs: Array,
     divisions: Array,
 });
+
+const staffList = ref([...props.staffs]);
+watch(
+    () => props.staffs,
+    (newVal) => {
+        staffList.value = [...newVal];
+    },
+);
+
+const saveOrder = () => {
+    router.post(
+        route("staff.update.order"),
+        {
+            order: staffList.value.map((s) => s.id),
+        },
+        {
+            preserveScroll: true,
+            preserveState: true,
+        },
+    );
+};
 </script>
 
 <script>
@@ -79,7 +111,7 @@ export default {
                                         <label for="">Image:</label>
                                         <input
                                             type="file"
-                                            accept="img/staff/*"
+                                            accept="/img/staff/*"
                                             class="form-control"
                                             @change="handlePhotoView"
                                         />
@@ -177,6 +209,7 @@ export default {
                             <table class="table table-bordered table-hover">
                                 <thead class="table-dark">
                                     <tr>
+                                        <th class="text-center">Order</th>
                                         <th class="text-center">Photo</th>
                                         <th class="text-center">Name</th>
                                         <th class="text-center">
@@ -187,78 +220,101 @@ export default {
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr
-                                        v-for="(staff, index) in staffs"
-                                        :key="index"
-                                    >
-                                        <td class="align-middle text-center">
-                                            <img
-                                                :src="`/${staff.photo}`"
-                                                alt=""
-                                                v-if="staff.photo"
-                                                width="100"
-                                            />
-                                            <img
-                                                src="/img/no-image.jpg"
-                                                alt=""
-                                                width="100"
-                                                v-else
-                                            />
-                                        </td>
-                                        <td class="align-middle">
-                                            {{ staff.name }}
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            {{ staff.position }} |
-                                            {{ staff.designation }}
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            {{ staff.divname }}
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <span
-                                                class="badge text-bg-success"
-                                                v-if="staff.isActive === 1"
-                                                >Active</span
+                                <draggable
+                                    v-model="staffList"
+                                    item-key="id"
+                                    tag="tbody"
+                                    @end="saveOrder"
+                                    handle=".drag-handle"
+                                >
+                                    <template #item="{ element: staff, index }">
+                                        <tr>
+                                            <td
+                                                class="drag-handle text-center align-middle"
+                                                style="cursor: grab"
                                             >
-                                            <span
-                                                class="badge text-bg-danger"
-                                                v-if="staff.isActive === 0"
-                                                >Inactive</span
+                                                ☰ {{ staff.order }}
+                                            </td>
+                                            <td
+                                                class="align-middle text-center"
                                             >
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <button
-                                                type="button"
-                                                class="btn btn-warning"
-                                                @click="staffDate(staff)"
+                                                <img
+                                                    :src="`${staff.photo}`"
+                                                    alt=""
+                                                    v-if="staff.photo"
+                                                    width="100"
+                                                />
+                                                <img
+                                                    src="/img/no-image.jpg"
+                                                    alt=""
+                                                    width="100"
+                                                    v-else
+                                                />
+                                            </td>
+                                            <td class="align-middle">
+                                                {{ staff.name }}
+                                            </td>
+                                            <td
+                                                class="align-middle text-center"
                                             >
-                                                <i
-                                                    class="fa-solid fa-pen-to-square"
-                                                ></i>
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="btn btn-danger"
-                                                v-if="staff.isActive === 0"
+                                                {{ staff.position }} |
+                                                {{ staff.designation }}
+                                            </td>
+                                            <td
+                                                class="align-middle text-center"
                                             >
-                                                <i
-                                                    class="fa-solid fa-user-xmark"
-                                                ></i>
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="btn btn-success"
-                                                v-else-if="staff.isActive === 1"
+                                                {{ staff.divname }}
+                                            </td>
+                                            <td
+                                                class="align-middle text-center"
                                             >
-                                                <i
-                                                    class="fa-solid fa-user-check"
-                                                ></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                                <span
+                                                    class="badge text-bg-success"
+                                                    v-if="staff.isActive === 1"
+                                                    >Active</span
+                                                >
+                                                <span
+                                                    class="badge text-bg-danger"
+                                                    v-if="staff.isActive === 0"
+                                                    >Inactive</span
+                                                >
+                                            </td>
+                                            <td
+                                                class="align-middle text-center"
+                                            >
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-warning"
+                                                    @click="staffDate(staff)"
+                                                >
+                                                    <i
+                                                        class="fa-solid fa-pen-to-square"
+                                                    ></i>
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-danger"
+                                                    v-if="staff.isActive === 0"
+                                                >
+                                                    <i
+                                                        class="fa-solid fa-user-xmark"
+                                                    ></i>
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-success"
+                                                    v-else-if="
+                                                        staff.isActive === 1
+                                                    "
+                                                >
+                                                    <i
+                                                        class="fa-solid fa-user-check"
+                                                    ></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </draggable>
                             </table>
                         </div>
                     </div>

@@ -1,5 +1,13 @@
+<script setup>
+const props = defineProps({
+    staffs: Array,
+    divisions: Array,
+});
+</script>
+
 <script>
 import AppLayout from "@/Layouts/Frontend/AppLayout.vue";
+import { defineAsyncComponent } from "vue";
 export default {
     layout: AppLayout,
 };
@@ -99,12 +107,12 @@ img {
             <div class="container">
                 <div class="filter-pills float-end">
                     <span class="filter-pill active">All</span>
-                    <span class="filter-pill"
-                        >Budget Preparation & accountability Division</span
+                    <span
+                        class="filter-pill"
+                        v-for="(div, index) in divisions"
+                        :key="index"
+                        >{{ div.name }}</span
                     >
-                    <span class="filter-pill">Provincial Affairs Division</span>
-                    <span class="filter-pill">Municipal Affairs Division</span>
-                    <span class="filter-pill">Digital Automation Group</span>
                 </div>
                 <h2 class="font-display" style="font-size: 1.6rem">
                     Staff Directory
