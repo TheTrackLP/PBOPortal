@@ -1,3 +1,9 @@
+<script setup>
+const props = defineProps({
+    settings: Object,
+});
+</script>
+
 <script>
 import AppLayout from "@/Layouts/Frontend/AppLayout.vue";
 export default {
@@ -44,7 +50,8 @@ li {
                             ></i>
                             <div>
                                 <strong>Phone</strong><br />
-                                <i class="fa-solid fa-phone"></i>(036) 621-XXXX
+                                <i class="fa-solid fa-phone"></i
+                                >{{ props.settings.contact }}
                             </div>
                         </li>
                         <li class="d-flex align-items-center mb-3">
@@ -53,7 +60,8 @@ li {
                             ></i>
                             <div>
                                 <strong>Email</strong><br />
-                                <i class="fa-solid fa-at"></i>pbo@capiz.gov.ph
+                                <i class="fa-solid fa-at"></i
+                                >{{ props.settings.address }}
                             </div>
                         </li>
                     </ul>
@@ -69,14 +77,14 @@ li {
                             ></i>
                             <div>
                                 <strong>Address</strong><br />
-                                Provincial Capitol, Roxas City, Capiz
+                                {{ props.settings.address }}
                             </div>
                         </li>
                     </ul>
                 </div>
                 <div class="col-md-6 d-flex align-items-center">
                     <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d581.0116852876965!2d122.75354856254049!3d11.582999611561844!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33a5f2f04fff0d45%3A0xd1dbe4fefc632fd!2sCapiz%20Provincial%20Capitol!5e0!3m2!1sen!2sph!4v1785288588668!5m2!1sen!2sph"
+                        :src="props.settings.map_url"
                         width="1000"
                         height="600"
                         style="border: 0"

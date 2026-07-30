@@ -48,8 +48,11 @@ const page = usePage();
             <a href="#" class="nav-link-custom"
                 ><i class="fa-solid fa-clock"></i> Activity Log</a
             >
-            <a href="#" class="nav-link-custom"
-                ><i class="fa-solid fa-gear"></i> Site Settings</a
+            <Link
+                :class="{ active: page.url.startsWith('/admin/settings') }"
+                :href="route('admin.settings')"
+                class="nav-link-custom"
+                ><i class="fa-solid fa-gear"></i> Site Settings</Link
             >
         </div>
 

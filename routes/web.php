@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\DivisionController;
+use App\Http\Controllers\Backend\SettingsController;
 use App\Http\Controllers\Backend\StaffController as BackendStaffController;
 use App\Http\Controllers\Frontend\AboutController;
 use App\Http\Controllers\Frontend\PageController;
@@ -29,5 +30,10 @@ Route::group([], function(){
     Route::controller(DivisionController::class)->group(function(){
         Route::get('/admin/division', 'divisionIndex')->name('admin.div');
         Route::post('/admin/division/add', 'divisionAdd')->name('div.add');
+    });
+
+    Route::controller(SettingsController::class)->group(function(){
+        Route::get('/admin/settings', 'indexSettings')->name('admin.settings');
+        Route::post('/admin/settings/update', 'settingsUpdate')->name('settings.update');
     });
 });
