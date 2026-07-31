@@ -1,5 +1,6 @@
 <script setup>
 import { Link, usePage } from "@inertiajs/vue3";
+import { route } from "ziggy-js";
 const page = usePage();
 </script>
 
@@ -40,6 +41,12 @@ const page = usePage();
             >
             <a href="#" class="nav-link-custom"
                 ><i class="fa-solid fa-toolbox"></i> Services</a
+            >
+            <Link
+                :href="route('admin.about')"
+                :class="{ active: page.url.startsWith('/admin/about') }"
+                class="nav-link-custom"
+                ><i class="fa-solid fa-circle-info"></i> About</Link
             >
             <div class="sidebar-section-label">System</div>
             <a href="#" class="nav-link-custom"

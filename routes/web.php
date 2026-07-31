@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Backend\AboutController as BackendAboutController;
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\DivisionController;
 use App\Http\Controllers\Backend\SettingsController;
@@ -35,5 +36,11 @@ Route::group([], function(){
     Route::controller(SettingsController::class)->group(function(){
         Route::get('/admin/settings', 'indexSettings')->name('admin.settings');
         Route::post('/admin/settings/update', 'settingsUpdate')->name('settings.update');
+    });
+
+    Route::controller(BackendAboutController::class)->group(function(){
+        Route::get('/admin/about', 'aboutIndex')->name('admin.about');
+        Route::post('/admin/about/change', 'AddUpdateAboutPage')->name('about.change');
+        Route::post('/admin/about/mandate', 'AddUpdateMandate')->name('about.mandate');
     });
 });

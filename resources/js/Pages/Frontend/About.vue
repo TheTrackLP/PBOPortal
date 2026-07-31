@@ -1,119 +1,159 @@
+<script setup>
+const props = defineProps({
+    abouts: Object,
+});
+</script>
+
 <script>
 import AppLayout from "@/Layouts/Frontend/AppLayout.vue";
 export default {
     layout: AppLayout,
 };
 </script>
+<style scoped>
+:root {
+    --gold: #c9a227;
+}
+body {
+    background: #fff;
+}
 
+.card-mvm {
+    border: 1px solid #e9e5db;
+    transition:
+        box-shadow 0.15s ease,
+        transform 0.15s ease;
+}
+.card-mvm:hover {
+    box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
+}
+</style>
 <template>
     <section class="hero">
         <div class="container position-relative">
-            <h1 class="font-display fw-bold">About Our Office</h1>
-            <p class="lead mb-4"></p>
+            <h1 class="font-display fw-bold">About the Office</h1>
+            <p class="lead mb-4">
+                The Provincial Budget Office oversees the preparation, review,
+                and monitoring of the province's annual budget — guided by the
+                Local Government Code and grounded in transparent, accountable
+                governance.
+            </p>
         </div>
     </section>
     <section class="py-5">
         <div class="container">
             <div class="row g-4">
                 <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-body border-right">
-                            <i class="bi bi-bullseye mb-2 d-block"></i>
-                            <h5 class="font-display">Our Mission</h5>
-                            <p class="mb-0">
-                                To deliver efficient administrative support and
-                                public service that upholds integrity and
-                                accountability in local governance.
+                    <div class="card card-mvm h-100 shadow-sm">
+                        <div class="card-body p-4">
+                            <div class="icon-circle mb-3">
+                                <i class="bi bi-bullseye"></i>
+                            </div>
+                            <h5 class="fw-bold">
+                                {{ props.abouts?.mission_title }}
+                            </h5>
+                            <p class="mb-0 text-secondary">
+                                {{ props.abouts?.mission_content }}
                             </p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-body border-right">
-                            <i class="bi bi-eye-fill mb-2 d-block"></i>
-                            <h5 class="font-display">Our Vision</h5>
-                            <p class="mb-0">
-                                A model administrative office recognized for
-                                excellence, transparency, and responsiveness to
-                                the needs of the community.
+                    <div class="card card-mvm h-100 shadow-sm">
+                        <div class="card-body p-4">
+                            <div class="icon-circle mb-3">
+                                <i class="bi bi-eye-fill"></i>
+                            </div>
+                            <h5 class="fw-bold">
+                                {{ props.abouts?.vision_title }}
+                            </h5>
+                            <p class="mb-0 text-secondary">
+                                {{ props.abouts?.vision_content }}
                             </p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-body border-right">
-                            <i class="bi bi-shield-check mb-2 d-block"></i>
-                            <h5 class="font-display">Organization Outcome</h5>
-                            <p class="mb-0">
-                                Established under the Local Government Code to
-                                oversee daily administrative operations of the
-                                provincial government.
+                    <div class="card card-mvm h-100 shadow-sm">
+                        <div class="card-body p-4">
+                            <div class="icon-circle mb-3">
+                                <i class="bi bi-shield-check"></i>
+                            </div>
+                            <h5 class="fw-bold">
+                                {{ props.abouts?.org_outcome_title }}
+                            </h5>
+                            <p class="mb-0 text-secondary">
+                                {{ props.abouts?.org_outcome_content }}
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="card mt-4">
-                <div class="card-body">
-                    <h5 class="text-center">Organization Outcome</h5>
-                    <p class="mb-0">
-                        The budget officer shall take charge of the budget
-                        office and shall:
-                    </p>
-                    <p class="mb-0">
-                        1. Prepare forms, orders, and circulars embodying
-                        instructions on budgetary and appropriation matters for
-                        the signature of the Governor;
-                    </p>
-                    <p class="mb-0">
-                        2. Review and consolidate the budget proposals of
-                        departments;
-                    </p>
-                    <p class="mb-0">
-                        3. Assist the Governor in the preparation of the budget
-                        and during budget hearing;
-                    </p>
-                    <p class="mb-0">
-                        4. Study and evaluate the budgetary implications of
-                        proposed legislation and submit comments and
-                        recommendations thereon;
-                    </p>
-                    <p class="mb-0">
-                        5. Submit periodic budgetary reports to the Department
-                        of Budget and Management (DBM); 6
-                    </p>
-                    <p class="mb-0">
-                        6. Coordinate with the Treasurer, Accountant, and the
-                        Planning and Development Coordinator for the purpose of
-                        budgeting:
-                    </p>
-                    <p class="mb-0">
-                        7. Assist the Sanggunian concerned in reviewing the
-                        approved budgets of component local government units;
-                    </p>
-                    <p class="mb-0">
-                        8. Coordinate with the planning and development
-                        coordinator in the formulation of the Local Government
-                        Unit development plan;
-                    </p>
-                    <p class="mb-0">
-                        9. Perform Daily Transaction of Internal Control;
-                    </p>
-                    <p class="mb-0">
-                        10. Perform Administrative duties pertinent to office
-                        function;
-                    </p>
-                    <p class="mb-0">
-                        11. Train the City, Municipal and Barangay Officials on
-                        Budgeting, Procurement, etc.;
-                    </p>
-                    <p class="mb-0">
-                        12. Exercise such other powers and perform such other
-                        duties and functions as may be prescribed by law or
-                        ordinance.
-                    </p>
+            <div class="card mt-5 shadow-sm border-0">
+                <div class="card-body p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <h5 class="fw-bold mb-2">Mandate</h5>
+                        <p class="text-secondary mb-0">
+                            The budget officer shall take charge of the budget
+                            office and shall:
+                        </p>
+                    </div>
+                    <ol class="list-group list-group-numbered list-group-flush">
+                        <li class="list-group-item px-0 py-3">
+                            Prepare forms, orders, and circulars embodying
+                            instructions on budgetary and appropriation matters
+                            for the signature of the Governor.
+                        </li>
+                        <li class="list-group-item px-0 py-3">
+                            Review and consolidate the budget proposals of
+                            departments.
+                        </li>
+                        <li class="list-group-item px-0 py-3">
+                            Assist the Governor in the preparation of the budget
+                            and during budget hearing.
+                        </li>
+                        <li class="list-group-item px-0 py-3">
+                            Study and evaluate the budgetary implications of
+                            proposed legislation and submit comments and
+                            recommendations thereon.
+                        </li>
+                        <li class="list-group-item px-0 py-3">
+                            Submit periodic budgetary reports to the Department
+                            of Budget and Management (DBM).
+                        </li>
+                        <li class="list-group-item px-0 py-3">
+                            Coordinate with the Treasurer, Accountant, and the
+                            Planning and Development Coordinator for the purpose
+                            of budgeting.
+                        </li>
+                        <li class="list-group-item px-0 py-3">
+                            Assist the Sanggunian concerned in reviewing the
+                            approved budgets of component local government
+                            units.
+                        </li>
+                        <li class="list-group-item px-0 py-3">
+                            Coordinate with the Planning and Development
+                            Coordinator in the formulation of the Local
+                            Government Unit development plan.
+                        </li>
+                        <li class="list-group-item px-0 py-3">
+                            Perform daily transactions of internal control.
+                        </li>
+                        <li class="list-group-item px-0 py-3">
+                            Perform administrative duties pertinent to office
+                            function.
+                        </li>
+                        <li class="list-group-item px-0 py-3">
+                            Train the City, Municipal, and Barangay officials on
+                            budgeting, procurement, etc.
+                        </li>
+                        <li class="list-group-item px-0 py-3">
+                            Exercise such other powers and perform such other
+                            duties and functions as may be prescribed by law or
+                            ordinance.
+                        </li>
+                    </ol>
                 </div>
             </div>
         </div>
