@@ -206,3 +206,7 @@ body {
   color: #8b96b0;
   font-size: 0.8rem;
 }
+
+label {
+  font-weight: bold;
+}

@@ -1,4 +1,14 @@
 <script setup>
+import { supabase } from "@/lib/supabase";
+import { onMounted, ref } from "vue";
+
+const divList = ref([]);
+
+onMounted(async () => {
+  const { data, error } = await supabase.from("divisions").select("*");
+  divList.value = data;
+});
+
 // import { ref, computed } from "vue";
 
 // const selectedDivision = ref("all");
@@ -93,7 +103,13 @@ img {
           <button @click="selectDivision('all')" class="filter-pill">
             All
           </button>
-          <button class="filter-pill">Div Name</button>
+          <button
+            class="filter-pill"
+            v-for="(div, index) in divList"
+            :key="index"
+          >
+            {{ div.name }}
+          </button>
         </div>
         <h2 class="font-display" style="font-size: 1.6rem">Staff Directory</h2>
       </div>

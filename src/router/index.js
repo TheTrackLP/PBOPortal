@@ -52,6 +52,16 @@ const routes = [
         name: "AdminDivision",
         component: () => import("@/pages/Backend/Admin/pages/Division.vue"),
       },
+      {
+        path: "about",
+        name: "AdminAbout",
+        component: () => import("@/pages/Backend/Admin/pages/About.vue"),
+      },
+      {
+        path: "settings",
+        name: "AdminSettings",
+        component: () => import("@/pages/Backend/Admin/pages/Settings.vue"),
+      },
     ],
     meta: { requiresAuth: true },
   },

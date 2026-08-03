@@ -37,7 +37,12 @@
       <a href="#" class="nav-link-custom"
         ><i class="bi bi-tools"></i> Services</a
       >
-      <a class="nav-link-custom"><i class="bi bi-info-lg"></i> About</a>
+      <router-link
+        to="/admin/about"
+        active-class="active"
+        class="nav-link-custom"
+        ><i class="bi bi-info-lg"></i> About</router-link
+      >
       <div class="sidebar-section-label">System</div>
       <a href="#" class="nav-link-custom"
         ><i class="bi bi-person-fill-gear"></i> Users &amp; Roles</a
@@ -45,8 +50,11 @@
       <a href="#" class="nav-link-custom"
         ><i class="bi bi-clock"></i> Activity Log</a
       >
-      <a class="nav-link-custom"
-        ><i class="bi bi-gear-fill"></i> Site Settings</a
+      <router-link
+        to="/admin/settings"
+        active-class="active"
+        class="nav-link-custom"
+        ><i class="bi bi-gear-fill"></i> Site Settings</router-link
       >
     </div>
 
