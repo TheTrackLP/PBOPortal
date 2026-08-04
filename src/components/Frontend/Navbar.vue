@@ -1,5 +1,18 @@
 <script setup>
 import Home from "../../pages/Frontend/Home.vue";
+import { supabase } from "@/lib/supabase";
+import { onMounted, ref } from "vue";
+
+const aboutContents = ref(null);
+
+onMounted(async () => {
+  const { data, error } = await supabase
+    .from("aboutcontents")
+    .select("*")
+    .eq("id", 1)
+    .single();
+  aboutContents.value = data;
+});
 </script>
 
 <template>
@@ -9,9 +22,9 @@ import Home from "../../pages/Frontend/Home.vue";
     >
       <div>
         <span class="me-3"
-          ><i class="fa-solid fa-phone"></i>(036) 000-0000</span
+          ><i class="fa-solid fa-phone"></i>{{ aboutContents?.name }}</span
         >
-        <span><i class="fa-solid fa-envelope"></i> oca@example.gov.ph</span>
+        <span><i class="fa-solid fa-envelope"></i> {{}}</span>
       </div>
       <div
         class="small text-uppercase"

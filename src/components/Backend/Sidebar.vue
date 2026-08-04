@@ -8,8 +8,6 @@
         <div class="name">PBO Admin</div>
         <div class="sub">Control Panel</div>
       </div>
-
-      asdasd
     </div>
 
     <div>
@@ -21,7 +19,9 @@
         ><i class="bi bi-speedometer"></i> Dashboard</router-link
       >
       <div class="sidebar-section-label">Content</div>
-      <a href="#" class="nav-link-custom"> News &amp; Announcements</a>
+      <a href="#" class="nav-link-custom"
+        ><i class="fa-solid fa-newspaper"></i> News &amp; Announcements</a
+      >
       <router-link
         to="/admin/staff"
         active-class="active"
@@ -29,10 +29,10 @@
         ><i class="bi bi-people-fill"></i> Staff Directory</router-link
       >
       <router-link
-        to="/admin/division"
+        to="/admin/accomplishments"
         active-class="active"
         class="nav-link-custom"
-        ><i class="bi bi-building"></i> Division</router-link
+        ><i class="bi bi-building"></i> Accomplishments</router-link
       >
       <a href="#" class="nav-link-custom"
         ><i class="bi bi-tools"></i> Services</a

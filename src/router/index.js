@@ -67,6 +67,12 @@ const routes = [
         name: "AdminSettings",
         component: () => import("@/pages/Backend/Admin/pages/Settings.vue"),
       },
+      {
+        path: "accomplishments",
+        name: "AdminAccomplishments",
+        component: () =>
+          import("@/pages/Backend/Admin/pages/Accomplishments.vue"),
+      },
     ],
     meta: { requiresAuth: true },
   },
