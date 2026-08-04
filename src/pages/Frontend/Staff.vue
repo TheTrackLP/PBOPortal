@@ -9,25 +9,27 @@ onMounted(async () => {
   divList.value = data;
 });
 
-// import { ref, computed } from "vue";
+const headcActingList = ref([]);
+const staffList = ref([]);
+async function fetchHeadActing() {
+  const { data, error } = await supabase
+    .from("staff")
+    .select("*")
+    .in("category", ["head", "acting_head"])
+    .order("order", { ascending: true });
+  headcActingList.value = data;
+}
+async function fetchStaffs() {
+  const { data, error } = await supabase
+    .from("staff")
+    .select("*")
+    .eq("category", "staff")
+    .order("order", { ascending: true });
+  staffList.value = data;
+}
 
-// const selectedDivision = ref("all");
-
-// const filteredStaff = computed(() => {
-//   if (selectedDivision.value === "all") {
-//     return props.staffs;
-//   }
-//   return props.staffs.filter((s) => s.divisionid === selectedDivision.value);
-// });
-// function selectDivision(id) {
-//   selectedDivision.value = id;
-// }
-
-// const props = defineProps({
-//   leadership: Array,
-//   staffs: Array,
-//   divisions: Array,
-// });
+onMounted(fetchHeadActing);
+onMounted(fetchStaffs);
 </script>
 
 <style scoped>
@@ -78,8 +80,12 @@ img {
       </div>
     </section>
     <section class="py-5">
-      <div class="container">
-        <div class="card mb-3" v-for="(lead, index) in 2" :key="index">
+      <div class="container text-center">
+        <div
+          class="card mb-3 shadow"
+          v-for="(lead, index) in headcActingList"
+          :key="index"
+        >
           <div class="row g-0">
             <div class="col-md-4">
               <div class="profile-section">
@@ -88,9 +94,11 @@ img {
             </div>
             <div class="col-md-8">
               <div class="card-body">
-                <h5 class="card-title">Lead Name</h5>
-                <p class="card-text">lead Position</p>
-                <p class="card-text">Lead Desgination</p>
+                <h5 class="card-title uppercase">{{ lead.name }}</h5>
+                <p class="card-text uppercase">
+                  <strong>{{ lead.position }}</strong>
+                </p>
+                <p class="card-text uppercase">{{ lead.designation }}</p>
               </div>
             </div>
           </div>
@@ -117,13 +125,15 @@ img {
     <section class="pb-5">
       <div class="container">
         <div class="row row-cols-1 row-cols-md-3 g-4">
-          <div class="col" v-for="(staff, index) in 10" :key="index">
-            <div class="card">
+          <div class="col" v-for="(staff, index) in staffList" :key="index">
+            <div class="card shadow">
               <img class="card-img-top" alt="..." />
               <div class="card-body text-center">
-                <h5 class="card-title">Staff Name</h5>
-                <p class="card-text">Staff Position</p>
-                <p class="card-text">staff Desgination</p>
+                <h5 class="card-title uppercase">{{ staff.name }}</h5>
+                <p class="card-text uppercase">
+                  <strong>{{ staff.position }}</strong>
+                </p>
+                <p class="card-text uppercase">({{ staff.designation }})</p>
               </div>
             </div>
           </div>

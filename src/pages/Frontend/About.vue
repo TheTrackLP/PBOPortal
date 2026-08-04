@@ -1,4 +1,19 @@
-<script setup></script>
+<script setup>
+import { supabase } from "@/lib/supabase";
+import { onMounted, ref } from "vue";
+
+const aboutUsData = ref(null);
+
+onMounted(async () => {
+  const { data, error } = await supabase
+    .from("aboutcontents")
+    .select("*")
+    .eq("id", 1)
+    .single();
+
+  aboutUsData.value = data;
+});
+</script>
 
 <style scoped>
 :root {
@@ -39,8 +54,10 @@ body {
               <div class="icon-circle mb-3">
                 <i class="bi bi-bullseye"></i>
               </div>
-              <h5 class="fw-bold">mission title</h5>
-              <p class="mb-0 text-secondary">mission Content</p>
+              <h5 class="fw-bold">{{ aboutUsData?.mission_title }}</h5>
+              <p class="mb-0 text-secondary">
+                {{ aboutUsData?.mission_content }}
+              </p>
             </div>
           </div>
         </div>
@@ -50,8 +67,10 @@ body {
               <div class="icon-circle mb-3">
                 <i class="bi bi-eye-fill"></i>
               </div>
-              <h5 class="fw-bold">Vision Title</h5>
-              <p class="mb-0 text-secondary">Vision Content</p>
+              <h5 class="fw-bold">{{ aboutUsData?.vision_title }}</h5>
+              <p class="mb-0 text-secondary">
+                {{ aboutUsData?.vision_content }}
+              </p>
             </div>
           </div>
         </div>
@@ -61,8 +80,10 @@ body {
               <div class="icon-circle mb-3">
                 <i class="bi bi-shield-check"></i>
               </div>
-              <h5 class="fw-bold">org_content title</h5>
-              <p class="mb-0 text-secondary">org_content</p>
+              <h5 class="fw-bold">{{ aboutUsData?.org_title }}</h5>
+              <p class="mb-0 text-secondary">
+                {{ aboutUsData?.org_content }}
+              </p>
             </div>
           </div>
         </div>

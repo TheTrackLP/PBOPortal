@@ -3,7 +3,7 @@
 <template>
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
-      <img class="seal" />
+      <img src="/img/capiz-logo.png" class="seal" />
       <div>
         <div class="name">PBO Admin</div>
         <div class="sub">Control Panel</div>
@@ -47,9 +47,7 @@
       <a href="#" class="nav-link-custom"
         ><i class="bi bi-person-fill-gear"></i> Users &amp; Roles</a
       >
-      <a href="#" class="nav-link-custom"
-        ><i class="bi bi-clock"></i> Activity Log</a
-      >
+
       <router-link
         to="/admin/settings"
         active-class="active"

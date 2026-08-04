@@ -4,17 +4,17 @@ import { ref, onMounted } from "vue";
 
 const divData = ref([]);
 const staffForm = ref({
+  id: "",
   name: "",
   position: "",
   designation: "",
   photo: "",
   category: "staff",
-  order: "",
-  divisionid: "",
+  divisionid: null,
   is_active: 1,
 });
 
-const submitStaffMode = ref(false);
+const submitStaffMode = ref("create");
 const successMsg = ref("");
 const errorMsg = ref("");
 
@@ -24,48 +24,106 @@ onMounted(async () => {
 });
 
 const StaffLists = ref([]);
-onMounted(async () => {
+async function fetchStaffLists() {
   const { data, error } = await supabase.from("staff").select(`
     *,
-    divisions (*)
+    divisions (name)
   `);
   StaffLists.value = data;
-});
+}
+onMounted(fetchStaffLists);
 
-async function submitStaffData() {
-  submitStaffMode.value = true;
-  successMsg.value = "";
-  errorMsg.value = "";
-
-  const { error } = await supabase.from("staff").insert({
-    name: staffForm.value.name,
-    position: staffForm.value.position,
-    designation: staffForm.value.designation,
-    photo: staffForm.value.photo,
-    category: staffForm.value.category,
-    divisionid: staffForm.value.divisionid,
-    is_active: 1,
-  });
-
-  submitStaffMode.value = false;
+async function fetchStaff(staff) {
+  const { data, error } = await supabase
+    .from("staff")
+    .select("*")
+    .eq("id", staff.id)
+    .single();
 
   if (error) {
-    errorMsg.value = error.message;
+    console.error(error);
     return;
   }
+  staffForm.value = data;
+  submitStaffMode.value = "edit";
+}
 
-  successMsg.value = "Staff added successfully!";
+async function submitStaffData() {
+  if (submitStaffMode.value === "create") {
+    submitStaffMode.value = "create";
+    successMsg.value = "";
+    errorMsg.value = "";
 
-  staffForm.value = {
-    name: "",
-    position: "",
-    designation: "",
-    photo: "",
-    category: "",
-    order: "",
-    divisionid: "",
-    is_active: 1,
-  };
+    console.log("Submitting:", staffForm.value); // <-- add this line
+
+    const { data, error } = await supabase.from("staff").insert({
+      name: staffForm.value.name,
+      position: staffForm.value.position,
+      designation: staffForm.value.designation,
+      photo: staffForm.value.photo,
+      category: staffForm.value.category,
+      divisionid: staffForm.value.divisionid,
+      is_active: 1,
+    });
+
+    submitStaffMode.value = "create";
+
+    if (error) {
+      errorMsg.value = error.message;
+      return;
+    }
+
+    successMsg.value = "Staff added successfully!";
+    await fetchStaffLists();
+
+    staffForm.value = {
+      id: "",
+      name: "",
+      position: "",
+      designation: "",
+      photo: "",
+      category: "staff",
+      divisionid: null,
+      is_active: 1,
+    };
+  } else {
+    submitStaffMode.value = "edit";
+    successMsg.value = "";
+    errorMsg.value = "";
+
+    const { error } = await supabase
+      .from("staff")
+      .update({
+        name: staffForm.value.name,
+        position: staffForm.value.position,
+        designation: staffForm.value.designation,
+        photo: staffForm.value.photo,
+        category: staffForm.value.category,
+        divisionid: staffForm.value.divisionid,
+        is_active: 1,
+      })
+      .eq("id", staffForm.value.id);
+
+    submitStaffMode.value = "";
+
+    if (error) {
+      errorMsg.value = error.message;
+      return;
+    }
+
+    successMsg.value = "Staff Updated successfully!";
+
+    staffForm.value = {
+      id: "",
+      name: "",
+      position: "",
+      designation: "",
+      photo: "",
+      category: "staff",
+      divisionid: null,
+      is_active: 1,
+    };
+  }
 }
 async function toggleActive(staff) {
   const newStatus = !staff.is_active;
@@ -99,7 +157,7 @@ async function toggleActive(staff) {
                 <div class="row mb-3">
                   <input type="hidden" />
                   <div class="col-md-6 form-group mb-3">
-                    <input type="text" v-model="staffForm.id" />
+                    <input type="hidden" v-model="staffForm.id" />
                     <label for="">Image:</label>
                     <input
                       type="file"
@@ -142,7 +200,11 @@ async function toggleActive(staff) {
                   <label for="">Division</label>
                   <select v-model="staffForm.divisionid" class="form-select">
                     <option value="">Select an Option</option>
-                    <option v-for="(div, index) in divData" :value="div.id">
+                    <option
+                      v-for="(div, index) in divData"
+                      :key="index"
+                      :value="div.id"
+                    >
                       {{ div.name }}
                     </option>
                   </select>
@@ -161,7 +223,13 @@ async function toggleActive(staff) {
                   type="submit"
                   class="btn btn-success px-5 m-2 float-end"
                 >
-                  Create
+                  {{
+                    staffForm.processing
+                      ? "Saving..."
+                      : submitStaffMode === "create"
+                        ? "Add"
+                        : "Save Changes"
+                  }}
                 </button>
               </div>
             </div>
@@ -179,7 +247,7 @@ async function toggleActive(staff) {
                     <th class="text-center">Order</th>
                     <th class="text-center">Photo</th>
                     <th class="text-center">Name</th>
-                    <th class="text-center">Position/designation</th>
+                    <th class="text-center">Position/Designation</th>
                     <th class="text-center">Division</th>
                     <th class="text-center">Status</th>
                     <th class="text-center">Action</th>
@@ -187,18 +255,19 @@ async function toggleActive(staff) {
                 </thead>
                 <tbody>
                   <tr v-for="(staff, index) in StaffLists" :key="index">
-                    <td class="text-center">Order</td>
-                    <td class="text-center">Photo</td>
-                    <td class="text-center">
-                      <p>{{ staff.name }}</p>
+                    <td class="text-center align-middle">Order</td>
+                    <td class="text-center align-middle">Photo</td>
+                    <td class="text-center align-middle">
+                      {{ staff.name }}
                     </td>
-                    <td class="text-center">Position/designation</td>
-                    <td class="text-center">
-                      <p>
-                        {{ staff.divisions?.name }}
-                      </p>
+                    <td class="">
+                      <p>{{ staff.position }}</p>
+                      <p>{{ staff.designation }}</p>
                     </td>
-                    <td class="text-center">
+                    <td class="text-center align-middle">
+                      {{ staff.divisions?.name }}
+                    </td>
+                    <td class="text-center align-middle">
                       <span
                         class="badge rounded-pill text-bg-success"
                         v-if="staff.is_active === true"
@@ -210,16 +279,29 @@ async function toggleActive(staff) {
                         >Inactive</span
                       >
                     </td>
-                    <td class="text-center">
+                    <td class="text-center align-middle">
+                      <button
+                        type="button"
+                        class="btn btn-warning"
+                        @click="fetchStaff(staff)"
+                      >
+                        <i class="fa-solid fa-pen-to-square"></i>
+                      </button>
                       <button
                         type="button"
                         class="btn btn-success"
-                        :class="
-                          staff.is_active ? 'btn-success' : btn - secondary
-                        "
                         @click="toggleActive(staff)"
+                        v-if="staff.is_active === true"
                       >
-                        {{ staff.is_active ? "Active" : "Inactive" }}
+                        <i class="fa-solid fa-circle-check"></i>
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-danger"
+                        @click="toggleActive(staff)"
+                        v-else-if="staff.is_active === false"
+                      >
+                        <i class="fa-solid fa-circle-xmark"></i>
                       </button>
                     </td>
                   </tr>

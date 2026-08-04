@@ -25,7 +25,7 @@ import Home from "../../pages/Frontend/Home.vue";
   <nav class="navbar navbar-expand-lg navbar-office py-3">
     <div class="container">
       <a class="navbar-brand" href="#">
-        <img class="brand-seal" alt="..." />
+        <img src="/img/capiz-logo.png" class="brand-seal" alt="..." />
         <span class="brand-text">
           <strong class="font-display text-white"
             >Provincial Budget Office</strong
@@ -51,6 +51,14 @@ import Home from "../../pages/Frontend/Home.vue";
           <li class="nav-item">
             <router-link to="/about" active-class="active" class="nav-link"
               >About</router-link
+            >
+          </li>
+          <li class="nav-item">
+            <router-link
+              to="/accomplishments"
+              active-class="active"
+              class="nav-link"
+              >Accomplishments</router-link
             >
           </li>
           <li class="nav-item">

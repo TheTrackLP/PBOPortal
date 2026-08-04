@@ -1,8 +1,23 @@
-<script setup></script>
+<script setup>
+import { supabase } from "@/lib/supabase";
+import { onMounted, ref } from "vue";
+
+const contactData = ref(null);
+
+onMounted(async () => {
+  const { data, error } = await supabase
+    .from("settings")
+    .select("*")
+    .eq("id", 5)
+    .single();
+
+  contactData.value = data;
+});
+</script>
 
 <style>
 .contact-img {
-  width: 63rem;
+  width: 50rem;
   object-fit: cover;
   border-radius: 0.5rem;
 }
@@ -24,22 +39,24 @@ li {
     <div class="">
       <div class="row mx-3 my-3 mb-4 g-4">
         <div class="col-md-6 text-center">
-          <img alt="Capiz Provincial Seal" class="contact-img" />
+          <img
+            src="/img/capiz.jpg"
+            alt="Capiz Provincial Seal"
+            class="contact-img"
+          />
         </div>
         <div class="col-md-6 d-flex align-items-center">
           <ul class="list-unstyled mx-5">
             <li class="d-flex align-items-center mb-3">
-              <i class="bi bi-telephone-fill fs-5 text-warning me-3"></i>
               <div>
                 <strong>Phone</strong><br />
-                <i class="fa-solid fa-phone"></i>Contact
+                <i class="fa-solid fa-phone"></i>{{ contactData?.contact }}
               </div>
             </li>
             <li class="d-flex align-items-center mb-3">
-              <i class="bi bi-envelope-fill fs-5 text-warning me-3"></i>
               <div>
                 <strong>Email</strong><br />
-                <i class="fa-solid fa-at"></i>Email
+                <i class="fa-solid fa-at"></i> {{ contactData?.email }}
               </div>
             </li>
           </ul>
@@ -50,16 +67,17 @@ li {
         <div class="col-md-6">
           <ul class="list-unstyled mx-5">
             <li class="d-flex align-items-center mb-3">
-              <i class="bi bi-geo-alt-fill fs-5 text-warning me-3"></i>
               <div>
                 <strong>Address</strong><br />
-                Address
+                <i class="fa-solid fa-location-dot"></i>
+                {{ contactData?.address }}
               </div>
             </li>
           </ul>
         </div>
         <div class="col-md-6 d-flex align-items-center">
           <iframe
+            :src="contactData?.map_url"
             width="1000"
             height="600"
             style="border: 0"

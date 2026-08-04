@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.3.1",
     "@fortawesome/vue-fontawesome": "^3.3.3",
     "@supabase/supabase-js": "^2.111.0",
     "bootstrap": "^5.3.8",

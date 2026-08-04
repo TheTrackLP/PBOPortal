@@ -1,3 +1,17 @@
+<script setup>
+import { supabase } from "@/lib/supabase";
+import { onMounted, ref } from "vue";
+
+const fetchAbout = ref(null);
+
+onMounted(async () => {
+  const { data, error } = await supabase
+    .from("aboutcontents")
+    .select("*")
+    .single();
+  fetchAbout.value = data;
+});
+</script>
 <style scoped>
 img {
   width: 300px;
@@ -26,10 +40,9 @@ img {
           <div class="card">
             <div class="card-body">
               <i class="bi bi-bullseye mb-2 d-block"></i>
-              <h5 class="font-display">Our Mission</h5>
+              <h5 class="font-display">{{ fetchAbout?.mission_title }}</h5>
               <p class="text-secondary small mb-0">
-                To deliver efficient administrative support and public service
-                that upholds integrity and accountability in local governance.
+                {{ fetchAbout?.mission_content }}
               </p>
             </div>
           </div>
@@ -38,10 +51,9 @@ img {
           <div class="card">
             <div class="card-body">
               <i class="bi bi-eye-fill mb-2 d-block"></i>
-              <h5 class="font-display">Our Vision</h5>
+              <h5 class="font-display">{{ fetchAbout?.vision_title }}</h5>
               <p class="text-secondary small mb-0">
-                A model administrative office recognized for excellence,
-                transparency, and responsiveness to the needs of the community.
+                {{ fetchAbout?.vision_content }}
               </p>
             </div>
           </div>
@@ -50,36 +62,47 @@ img {
           <div class="card">
             <div class="card-body">
               <i class="bi bi-shield-check mb-2 d-block"></i>
-              <h5 class="font-display">Our Mandate</h5>
+              <h5 class="font-display">{{ fetchAbout?.org_title }}</h5>
               <p class="text-secondary small mb-0">
-                Established under the Local Government Code to oversee daily
-                administrative operations of the provincial government.
+                {{ fetchAbout?.org_content }}
               </p>
             </div>
           </div>
         </div>
       </div>
       <div class="text-center mt-4">
-        <a href="#" class="text-decoration-none fw-semibold"
+        <router-link to="/about" class="text-decoration-none fw-semibold"
           >Read more about our office <i class="bi bi-arrow-right"></i
-        ></a>
+        ></router-link>
       </div>
     </div>
   </section>
-  <section class="stats-strip py-5">
+  <section class="py-5" style="background: #eef0f5">
     <div class="container">
-      <div class="row text-center g-4">
-        <div class="col-6 col-md-4">
-          <div class="stat-number">30+</div>
-          <div class="stat-label">Years of Service</div>
+      <div
+        class="d-flex justify-content-between align-items-end mb-5 flex-wrap gap-2"
+      >
+        <div>
+          <h2 class="font-display section-title mb-0">Accomplishments</h2>
         </div>
-        <div class="col-6 col-md-4">
-          <div class="stat-number">24</div>
-          <div class="stat-label">Staff Members</div>
-        </div>
-        <div class="col-6 col-md-4">
-          <div class="stat-number">12</div>
-          <div class="stat-label">Services Offered</div>
+        <a
+          href="#"
+          class="text-decoration-none fw-semibold"
+          style="color: var(--navy)"
+          >View all <i class="bi bi-arrow-right"></i
+        ></a>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4" v-for="item in 3" :key="item.id">
+          <div class="news-card">
+            <div class="p-3">
+              <div class="news-date">item year</div>
+              <h6 class="fw-bold mt-1">time title</h6>
+              <a href="file_url" target="_blank" class="small">
+                <i class="bi bi-eye"></i> View PDF
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>

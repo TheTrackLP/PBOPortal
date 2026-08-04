@@ -113,22 +113,6 @@ body {
   font-size: 1.7rem;
 }
 
-/* ---- Stats ---- */
-.stats-strip {
-  background: var(--navy);
-  color: #fff;
-}
-.stat-number {
-  font-family: "Lora", serif;
-  font-size: 2.2rem;
-  color: var(--gold-light);
-  font-weight: 700;
-}
-.stat-label {
-  color: #b7c0d6;
-  font-size: 0.85rem;
-}
-
 /* ---- Service cards ---- */
 .services-hover:hover {
   transform: translateY(-4px);
@@ -209,4 +193,7 @@ body {
 
 label {
   font-weight: bold;
+}
+.uppercase {
+  text-transform: uppercase;
 }
