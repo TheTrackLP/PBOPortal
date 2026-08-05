@@ -31,11 +31,25 @@ async function handleLogin() {
 
 <template>
   <div
-    class="container d-flex justify-content-center align-items-center"
-    style="min-height: 100vh"
+    class="d-flex align-items-center justify-content-center"
+    style="min-height: 100vh; background: #eef0f5"
   >
-    <div class="card p-4 shadow-sm" style="width: 100%; max-width: 400px">
-      <h4 class="mb-3 text-center">Admin Login</h4>
+    <div
+      class="card border-0 shadow-sm p-4"
+      style="width: 100%; max-width: 400px"
+    >
+      <div class="text-center mb-4">
+        <img
+          src="/img/capiz-logo.png"
+          alt="PBO Logo"
+          style="width: 70px; height: 70px"
+          class="mb-3"
+        />
+        <h5 class="fw-bold mb-0" style="color: var(--navy-deep, #0d2436)">
+          PBO Admin
+        </h5>
+        <p class="text-muted small">Provincial Budget Office</p>
+      </div>
 
       <div v-if="errorMsg" class="alert alert-danger py-2">{{ errorMsg }}</div>
 
@@ -44,6 +58,7 @@ async function handleLogin() {
           <label class="form-label">Email</label>
           <input v-model="email" type="email" class="form-control" required />
         </div>
+
         <div class="mb-3">
           <label class="form-label">Password</label>
           <input
@@ -53,7 +68,12 @@ async function handleLogin() {
             required
           />
         </div>
-        <button type="submit" class="btn btn-primary w-100" :disabled="loading">
+
+        <button
+          type="submit"
+          class="btn w-100"
+          style="background: var(--navy, #123a56); color: #fff"
+        >
           {{ loading ? "Logging in..." : "Login" }}
         </button>
       </form>

@@ -93,12 +93,12 @@ img {
         <div>
           <h2 class="font-display section-title mb-0">Accomplishments</h2>
         </div>
-        <a
-          href="#"
+        <router-link
+          to="/accomplishments"
           class="text-decoration-none fw-semibold"
           style="color: var(--navy)"
           >View all <i class="bi bi-arrow-right"></i
-        ></a>
+        ></router-link>
       </div>
       <div class="row g-4">
         <div
@@ -107,6 +107,15 @@ img {
           :key="index"
         >
           <div class="news-card">
+            <div
+              class="news-thumb d-flex align-items-center justify-content-center"
+              style="background: #dfe3ea"
+            >
+              <i
+                class="bi bi-file-earmark-pdf-fill text-danger"
+                style="font-size: 3rem"
+              ></i>
+            </div>
             <div class="p-3">
               <div class="news-date">{{ row.year }}</div>
               <h6 class="fw-bold mt-1">{{ row.title }}</h6>

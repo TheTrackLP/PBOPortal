@@ -71,12 +71,12 @@ const officeSettings = inject("officeSettings");
               >Staff</router-link
             >
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link" href="#">Services</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">News</a>
-          </li>
+          </li> -->
           <li class="nav-item">
             <router-link to="/contactus" active-class="active" class="nav-link"
               >Contact Us</router-link

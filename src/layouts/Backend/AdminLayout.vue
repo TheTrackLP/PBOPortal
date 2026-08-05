@@ -1,6 +1,17 @@
 <script setup>
 import Navbar from "@/components/Backend/Navbar.vue";
 import Sidebar from "@/components/Backend/Sidebar.vue";
+import { supabase } from "@/lib/supabase";
+import { onMounted, provide, ref } from "vue";
+
+const adminProfile = ref(null);
+
+onMounted(async () => {
+  const { data } = await supabase.from("profiles").select("*").single();
+  adminProfile.value = data;
+});
+
+provide("adminProfile", adminProfile);
 </script>
 <style>
 :root {

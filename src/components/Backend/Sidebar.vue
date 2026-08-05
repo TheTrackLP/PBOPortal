@@ -1,4 +1,17 @@
-<script setup></script>
+<script setup>
+import { inject } from "vue";
+import { useRouter } from "vue-router";
+import { supabase } from "@/lib/supabase";
+
+const router = useRouter();
+
+const adminProfile = inject("adminProfile");
+
+async function handleLogout() {
+  await supabase.auth.signOut();
+  router.push({ name: "AdminLogin" });
+}
+</script>
 
 <template>
   <aside class="sidebar" id="sidebar">
@@ -13,7 +26,7 @@
     <div>
       <div class="sidebar-section-label">Overview</div>
       <router-link
-        to="/admin/staff"
+        to="/admin/dashboard"
         exact-active-class="active"
         class="nav-link-custom"
         ><i class="bi bi-speedometer"></i> Dashboard</router-link
@@ -34,9 +47,9 @@
         class="nav-link-custom"
         ><i class="bi bi-building"></i> Accomplishments</router-link
       >
-      <a href="#" class="nav-link-custom"
+      <!-- <a href="#" class="nav-link-custom"
         ><i class="bi bi-tools"></i> Services</a
-      >
+      > -->
       <router-link
         to="/admin/about"
         active-class="active"
@@ -44,9 +57,9 @@
         ><i class="bi bi-info-lg"></i> About</router-link
       >
       <div class="sidebar-section-label">System</div>
-      <a href="#" class="nav-link-custom"
+      <!-- <a href="#" class="nav-link-custom"
         ><i class="bi bi-person-fill-gear"></i> Users &amp; Roles</a
-      >
+      > -->
 
       <router-link
         to="/admin/settings"
@@ -57,12 +70,17 @@
     </div>
 
     <div class="sidebar-footer">
-      <div class="user">
-        <div class="avatar">EC</div>
-        <div>
-          <div class="uname">Echo Cruz</div>
-          <div class="urole">Administrator</div>
+      <div class="d-flex gap-4 justify-content-between align-items-center">
+        <div class="user">
+          <img src="/img/capiz-logo.png" alt="" class="avatar" srcset="" />
+          <div>
+            <div class="uname">{{ adminProfile?.full_name }}</div>
+            <div class="urole">{{ adminProfile?.role }}</div>
+          </div>
         </div>
+        <button class="btn btn-sm btn-danger" @click="handleLogout">
+          <i class="fa-solid fa-power-off"></i>
+        </button>
       </div>
     </div>
   </aside>
