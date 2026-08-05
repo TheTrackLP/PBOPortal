@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabase";
 import { onMounted, ref } from "vue";
 
 const aboutUsData = ref(null);
+const fetchMandateList = ref([]);
 
 onMounted(async () => {
   const { data, error } = await supabase
@@ -12,6 +13,9 @@ onMounted(async () => {
     .single();
 
   aboutUsData.value = data;
+
+  const { data: mandates } = await supabase.from("mandates").select("*");
+  fetchMandateList.value = mandates;
 });
 </script>
 
@@ -88,7 +92,7 @@ body {
           </div>
         </div>
       </div>
-      <div class="card mt-5 shadow-sm border-0">
+      <div class="card mt-5 shadow border-0">
         <div class="card-body p-4 p-md-5">
           <div class="text-center mb-4">
             <h5 class="fw-bold mb-2">Mandate</h5>
@@ -98,51 +102,12 @@ body {
             </p>
           </div>
           <ol class="list-group list-group-numbered list-group-flush">
-            <li class="list-group-item px-0 py-3">
-              Prepare forms, orders, and circulars embodying instructions on
-              budgetary and appropriation matters for the signature of the
-              Governor.
-            </li>
-            <li class="list-group-item px-0 py-3">
-              Review and consolidate the budget proposals of departments.
-            </li>
-            <li class="list-group-item px-0 py-3">
-              Assist the Governor in the preparation of the budget and during
-              budget hearing.
-            </li>
-            <li class="list-group-item px-0 py-3">
-              Study and evaluate the budgetary implications of proposed
-              legislation and submit comments and recommendations thereon.
-            </li>
-            <li class="list-group-item px-0 py-3">
-              Submit periodic budgetary reports to the Department of Budget and
-              Management (DBM).
-            </li>
-            <li class="list-group-item px-0 py-3">
-              Coordinate with the Treasurer, Accountant, and the Planning and
-              Development Coordinator for the purpose of budgeting.
-            </li>
-            <li class="list-group-item px-0 py-3">
-              Assist the Sanggunian concerned in reviewing the approved budgets
-              of component local government units.
-            </li>
-            <li class="list-group-item px-0 py-3">
-              Coordinate with the Planning and Development Coordinator in the
-              formulation of the Local Government Unit development plan.
-            </li>
-            <li class="list-group-item px-0 py-3">
-              Perform daily transactions of internal control.
-            </li>
-            <li class="list-group-item px-0 py-3">
-              Perform administrative duties pertinent to office function.
-            </li>
-            <li class="list-group-item px-0 py-3">
-              Train the City, Municipal, and Barangay officials on budgeting,
-              procurement, etc.
-            </li>
-            <li class="list-group-item px-0 py-3">
-              Exercise such other powers and perform such other duties and
-              functions as may be prescribed by law or ordinance.
+            <li
+              class="list-group-item px-0 py-3"
+              v-for="(item, index) in fetchMandateList"
+              :key="index"
+            >
+              {{ item.content }}
             </li>
           </ol>
         </div>

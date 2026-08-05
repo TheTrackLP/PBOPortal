@@ -1,8 +1,9 @@
 <script setup>
 import { supabase } from "@/lib/supabase";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 const aboutusFormMode = ref(false);
+const mandateFormMode = ref("create");
 const successMsg = ref("");
 const errorMsg = ref("");
 
@@ -15,37 +16,152 @@ const aboutusForm = ref({
   org_content: "",
 });
 
+onMounted(async () => {
+  const { data: check, error } = await supabase
+    .from("aboutcontents")
+    .select("*")
+    .single();
+
+  const { data: mandateList } = await supabase.from("mandates").select("*");
+
+  if (error) {
+    console.error(error);
+  } else {
+    aboutusForm.value = {
+      id: check.id ?? "",
+      mission_title: check.mission_title ?? "",
+      mission_content: check.mission_content ?? "",
+      vision_title: check.vision_title ?? "",
+      vision_content: check.vision_content ?? "",
+      org_title: check.org_title ?? "",
+      org_content: check.org_content ?? "",
+    };
+
+    const { data: mandateList } = await supabase.from("mandates").select("*");
+
+    if (mandateList) {
+      mandateForm.value.mandateArray = mandateList.map((item) => ({
+        id: item.id ?? "",
+        content: item.content ?? "",
+      }));
+    }
+  }
+});
+
 async function submitAboutUs() {
-  aboutusFormMode.value = true;
+  const { data: check } = await supabase
+    .from("aboutcontents")
+    .select("*")
+    .single();
+
+  if (check) {
+    aboutusFormMode.value = true;
+    successMsg.value = "";
+    errorMsg.value = "";
+
+    const { data, error } = await supabase
+      .from("aboutcontents")
+      .update({
+        mission_title: aboutusForm.value.mission_title,
+        mission_content: aboutusForm.value.mission_content,
+        vision_title: aboutusForm.value.vision_title,
+        vision_content: aboutusForm.value.vision_content,
+        org_title: aboutusForm.value.org_title,
+        org_content: aboutusForm.value.org_content,
+      })
+      .eq("id", aboutusForm.value.id);
+
+    aboutusFormMode.value = false;
+
+    if (error) {
+      errorMsg.value = error.message;
+      return;
+    }
+
+    successMsg.value = "About page info Updated Successfully";
+  } else {
+    aboutusFormMode.value = true;
+    successMsg.value = "";
+    errorMsg.value = "";
+
+    const { data, error } = await supabase.from("aboutcontents").insert({
+      mission_title: aboutusForm.value.mission_title,
+      mission_content: aboutusForm.value.mission_content,
+      vision_title: aboutusForm.value.vision_title,
+      vision_content: aboutusForm.value.vision_content,
+      org_title: aboutusForm.value.org_title,
+      org_content: aboutusForm.value.org_content,
+    });
+
+    aboutusFormMode.value = false;
+
+    if (error) {
+      errorMsg.value = error.message;
+      return;
+    }
+
+    successMsg.value = "About page info added Successfully";
+  }
+}
+
+const mandateForm = ref({
+  mandateArray: [],
+});
+
+const addMandate = () => {
+  mandateForm.value.mandateArray.push({
+    content: "",
+  });
+};
+async function fetchMandates() {
+  const { data, error } = await supabase.from("mandates").select("*");
+  if (data) {
+    mandateForm.value.mandateArray = data.map((item) => ({
+      id: item.id,
+      content: item.content,
+    }));
+  }
+}
+
+async function submitMandate() {
   successMsg.value = "";
   errorMsg.value = "";
 
-  const { error } = await supabase.from("aboutcontents").insert({
-    mission_title: aboutusForm.value.mission_title,
-    mission_content: aboutusForm.value.mission_content,
-    vision_title: aboutusForm.value.vision_title,
-    vision_content: aboutusForm.value.vision_content,
-    org_title: aboutusForm.value.org_title,
-    org_content: aboutusForm.value.org_content,
-  });
+  for (const row of mandateForm.value.mandateArray) {
+    if (row.id) {
+      const { error } = await supabase
+        .from("mandates")
+        .update({ content: row.content })
+        .eq("id", row.id);
 
-  aboutusFormMode.value = false;
+      if (error) {
+        errorMsg.value = error.message;
+        return;
+      }
+    } else {
+      const { data, error } = await supabase
+        .from("mandates")
+        .insert({ content: row.content })
+        .select()
+        .single();
 
-  if (error) {
-    errorMsg.value = error.message;
-    return;
+      if (error) {
+        errorMsg.value = error.message;
+        return;
+      }
+      row.id = data.id;
+    }
   }
 
-  successMsg.value = "About page info added Successfully";
+  successMsg.value = "Mandates updated successfully!";
+}
+function removeMandateRow(index) {
+  const row = mandateForm.value.mandateArray[index];
+  if (row.id) {
+    supabase.from("mandates").delete().eq("id", row.id);
+  }
 
-  aboutusForm.value = {
-    mission_title: "",
-    mission_content: "",
-    vision_title: "",
-    vision_content: "",
-    org_title: "",
-    org_content: "",
-  };
+  mandateForm.value.mandateArray.splice(index, 1);
 }
 </script>
 <template>
@@ -70,6 +186,7 @@ async function submitAboutUs() {
                 <h6 class="mb-0 fw-semibold">Mission</h6>
               </div>
               <div class="card-body">
+                <input type="hidden" v-model="aboutusForm.id" />
                 <div class="mb-3">
                   <label
                     for="mission_title"
@@ -195,37 +312,44 @@ async function submitAboutUs() {
             <div id="mandate-items">
               <div
                 class="row g-2 align-items-start mandate-item mb-3"
-                v-for="(item, index) in 2"
+                v-for="(item, index) in mandateForm.mandateArray"
                 :key="index"
               >
                 <div class="col-auto pt-2">
                   <span class="badge bg-secondary rounded-circle p-2">{{
                     index + 1
                   }}</span>
+                  <input type="hidden" v-model="item.id" />
                 </div>
                 <div class="col">
                   <textarea
                     class="form-control"
                     rows="2"
                     placeholder="Enter mandate point..."
+                    v-model="item.content"
                   ></textarea>
                 </div>
                 <div class="col-auto">
                   <button
                     type="button"
                     class="btn btn-outline-danger btn-sm remove-item"
+                    @click="removeMandateRow(index)"
                   >
                     <i class="fa-solid fa-circle-xmark"></i>
                   </button>
                 </div>
               </div>
             </div>
-            <button type="button" class="btn btn-outline-warning btn-sm mt-2">
-              <i class="bi bi-plus-lg me-1"></i>Add Mandate Point
-            </button>
           </div>
         </div>
         <div class="d-flex justify-content-end gap-2">
+          <button
+            type="button"
+            class="btn btn-primary text-white px-4 fw-semibold float-start"
+            @click="addMandate"
+          >
+            <i class="bi bi-plus-lg me-1"></i>Add Mandate Point
+          </button>
           <button
             type="submit"
             class="btn btn-warning text-white px-4 fw-semibold"
