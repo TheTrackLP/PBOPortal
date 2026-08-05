@@ -22,6 +22,11 @@ const routes = [
         component: () => import("@/pages/Frontend/Accomplishments.vue"),
       },
       {
+        path: "citizencharter",
+        name: "CitizenCharter",
+        component: () => import("@/pages/Frontend/CitizenCharter.vue"),
+      },
+      {
         path: "staff",
         name: "Staff",
         component: () => import("@/pages/Frontend/Staff.vue"),
@@ -71,6 +76,12 @@ const routes = [
         path: "settings",
         name: "AdminSettings",
         component: () => import("@/pages/Backend/Admin/pages/Settings.vue"),
+      },
+      {
+        path: "citizencharter",
+        name: "AdminCitizenCharter",
+        component: () =>
+          import("@/pages/Backend/Admin/pages/CitizenCharter.vue"),
       },
       {
         path: "accomplishments",

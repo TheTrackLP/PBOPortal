@@ -48,9 +48,12 @@ async function handleLogout() {
         class="nav-link-custom"
         ><i class="bi bi-building"></i> Accomplishments</router-link
       >
-      <!-- <a href="#" class="nav-link-custom"
-        ><i class="bi bi-tools"></i> Services</a
-      > -->
+      <router-link
+        to="/admin/citizencharter"
+        active-class="active"
+        class="nav-link-custom"
+        ><i class="bi bi-tools"></i> Citizen Charter</router-link
+      >
       <router-link
         to="/admin/about"
         active-class="active"
