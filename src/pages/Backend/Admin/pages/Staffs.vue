@@ -54,8 +54,6 @@ async function submitStaffData() {
     successMsg.value = "";
     errorMsg.value = "";
 
-    console.log("Submitting:", staffForm.value); // <-- add this line
-
     const { data, error } = await supabase.from("staff").insert({
       name: staffForm.value.name,
       position: staffForm.value.position,

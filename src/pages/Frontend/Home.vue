@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabase";
 import { onMounted, ref } from "vue";
 
 const fetchAbout = ref(null);
+const fetchAccomplishList = ref([]);
 
 onMounted(async () => {
   const { data, error } = await supabase
@@ -10,6 +11,13 @@ onMounted(async () => {
     .select("*")
     .single();
   fetchAbout.value = data;
+
+  const { data: accomplish } = await supabase
+    .from("accomplishments")
+    .select("*")
+    .limit("3")
+    .order("order", { ascending: false });
+  fetchAccomplishList.value = accomplish;
 });
 </script>
 <style scoped>
@@ -93,12 +101,16 @@ img {
         ></a>
       </div>
       <div class="row g-4">
-        <div class="col-md-4" v-for="item in 3" :key="item.id">
+        <div
+          class="col-md-4"
+          v-for="(row, index) in fetchAccomplishList"
+          :key="index"
+        >
           <div class="news-card">
             <div class="p-3">
-              <div class="news-date">item year</div>
-              <h6 class="fw-bold mt-1">time title</h6>
-              <a href="file_url" target="_blank" class="small">
+              <div class="news-date">{{ row.year }}</div>
+              <h6 class="fw-bold mt-1">{{ row.title }}</h6>
+              <a :href="row.file" target="_blank" class="small">
                 <i class="bi bi-eye"></i> View PDF
               </a>
             </div>
