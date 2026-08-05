@@ -32,8 +32,9 @@ async function handleLogout() {
         ><i class="bi bi-speedometer"></i> Dashboard</router-link
       >
       <div class="sidebar-section-label">Content</div>
-      <a href="#" class="nav-link-custom"
-        ><i class="fa-solid fa-newspaper"></i> News &amp; Announcements</a
+      <router-link to="/admin/news" class="nav-link-custom"
+        ><i class="fa-solid fa-newspaper"></i> News &amp;
+        Announcements</router-link
       >
       <router-link
         to="/admin/staff"

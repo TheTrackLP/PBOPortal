@@ -53,6 +53,11 @@ const routes = [
         component: () => import("@/pages/Backend/Admin/pages/Staffs.vue"),
       },
       {
+        path: "news",
+        name: "AdminNews",
+        component: () => import("@/pages/Backend/Admin/pages/News.vue"),
+      },
+      {
         path: "division",
         name: "AdminDivision",
         component: () => import("@/pages/Backend/Admin/pages/Division.vue"),
