@@ -21,10 +21,6 @@ onMounted(async () => {
   object-fit: cover;
   border-radius: 0.5rem;
 }
-ul,
-li {
-  font-size: 20px;
-}
 </style>
 
 <template>

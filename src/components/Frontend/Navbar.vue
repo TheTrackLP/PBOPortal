@@ -1,18 +1,8 @@
 <script setup>
 import Home from "../../pages/Frontend/Home.vue";
-import { supabase } from "@/lib/supabase";
-import { onMounted, ref } from "vue";
+import { inject } from "vue";
 
-const aboutContents = ref(null);
-
-onMounted(async () => {
-  const { data, error } = await supabase
-    .from("aboutcontents")
-    .select("*")
-    .eq("id", 1)
-    .single();
-  aboutContents.value = data;
-});
+const officeSettings = inject("officeSettings");
 </script>
 
 <template>
@@ -22,9 +12,11 @@ onMounted(async () => {
     >
       <div>
         <span class="me-3"
-          ><i class="fa-solid fa-phone"></i>{{ aboutContents?.name }}</span
+          ><i class="fa-solid fa-phone"></i>{{ officeSettings?.contact }}</span
         >
-        <span><i class="fa-solid fa-envelope"></i> {{}}</span>
+        <span
+          ><i class="fa-solid fa-envelope"></i>{{ officeSettings?.email }}
+        </span>
       </div>
       <div
         class="small text-uppercase"
@@ -40,10 +32,10 @@ onMounted(async () => {
       <a class="navbar-brand" href="#">
         <img src="/img/capiz-logo.png" class="brand-seal" alt="..." />
         <span class="brand-text">
-          <strong class="font-display text-white"
-            >Provincial Budget Office</strong
-          >
-          <small>Provincial Capitol, Roxas City, Capiz</small>
+          <strong class="font-display text-white">{{
+            officeSettings?.name
+          }}</strong>
+          <small>{{ officeSettings?.address }}</small>
         </span>
       </a>
       <button

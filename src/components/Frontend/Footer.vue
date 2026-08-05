@@ -1,14 +1,20 @@
+<script setup>
+import { inject } from "vue";
+
+const officeSettings = inject("officeSettings");
+</script>
+
 <template>
   <footer class="footer-office">
     <div class="container py-5">
       <div class="row g-4">
         <div class="col-md-4">
-          <h6 class="font-display mb-3">Provincial Budget Office</h6>
+          <h6 class="font-display mb-3">{{ officeSettings?.name }}</h6>
           <p class="text-muted-light mb-1">
-            Provincial Capitol, Roxas City, Capiz
+            {{ officeSettings?.address }}
           </p>
-          <p class="text-muted-light mb-1">(036) 000-0000</p>
-          <p class="text-muted-light mb-0">oca@example.gov.ph</p>
+          <p class="text-muted-light mb-1">{{ officeSettings?.contact }}</p>
+          <p class="text-muted-light mb-0">{{ officeSettings?.email }}</p>
         </div>
         <div class="col-md-4">
           <h6 class="font-display mb-3">Quick Links</h6>
