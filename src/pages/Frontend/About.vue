@@ -9,7 +9,7 @@ onMounted(async () => {
   const { data, error } = await supabase
     .from("aboutcontents")
     .select("*")
-    .eq("id", 5)
+    .eq("id", 1)
     .single();
 
   aboutUsData.value = data;
