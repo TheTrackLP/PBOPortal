@@ -9,7 +9,7 @@ onMounted(async () => {
   const { data, error } = await supabase
     .from("aboutcontents")
     .select("*")
-    .eq("id", 1)
+    .eq("id", 5)
     .single();
 
   aboutUsData.value = data;
@@ -40,9 +40,9 @@ body {
 </style>
 <template>
   <section class="hero">
-    <div class="container position-relative">
+    <div class="container text-center">
       <h1 class="font-display fw-bold">About the Office</h1>
-      <p class="lead mb-4">
+      <p class="mb-0 text-white-50">
         The Provincial Budget Office oversees the preparation, review, and
         monitoring of the province's annual budget — guided by the Local
         Government Code and grounded in transparent, accountable governance.

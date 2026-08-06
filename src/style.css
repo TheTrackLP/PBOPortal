@@ -96,10 +96,6 @@ body {
 .hero h1 {
   font-size: 2.6rem;
 }
-.hero p.lead {
-  color: #c3cbdd;
-  max-width: 560px;
-}
 
 /* ---- Section headings ---- */
 .section-eyebrow {

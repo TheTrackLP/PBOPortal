@@ -4,6 +4,7 @@ import { onMounted, ref } from "vue";
 
 const fetchAbout = ref(null);
 const fetchAccomplishList = ref([]);
+const fetchHead = ref(null);
 
 onMounted(async () => {
   const { data, error } = await supabase
@@ -18,6 +19,14 @@ onMounted(async () => {
     .limit("3")
     .order("order", { ascending: false });
   fetchAccomplishList.value = accomplish;
+
+  const { data: head } = await supabase
+    .from("staff")
+    .select("*")
+    .eq("category", "head")
+    .single();
+
+  fetchHead.value = head;
 });
 </script>
 <style scoped>
@@ -33,9 +42,9 @@ img {
 </style>
 <template>
   <section class="hero">
-    <div class="container position-relative">
-      <h1 class="font-display fw-bold">Provincial Budget Office</h1>
-      <p class="lead mb-4">
+    <div class="container text-center text-white">
+      <h1 class="font-display fw-bold mb-2">Provincial Budget Office</h1>
+      <p class="mb-0 text-white-50">
         Ensuring efficient, transparent, and responsive local governance for
         every resident of Roxas City.
       </p>
@@ -237,9 +246,9 @@ img {
           <i class="bi bi-person-fill"></i>
         </div>
         <div class="">
-          <div class="fw-bold">ATTY. KAREN L. LIPARDO</div>
-          <div class="text-secondary small">
-            ACTING PROVINCIAL BUDGET OFFICER
+          <div class="fw-bold uppercase">{{ fetchHead?.name }}</div>
+          <div class="text-secondary small uppercase">
+            {{ fetchHead?.position }}
           </div>
         </div>
       </div>

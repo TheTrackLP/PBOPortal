@@ -87,9 +87,9 @@ img {
 <template>
   <div>
     <section class="hero">
-      <div class="container position-relative">
+      <div class="container text-center">
         <h1 class="font-display fw-bold">Meet Our Staff</h1>
-        <p class="lead mb-0">
+        <p class="mb-0 text-white-50">
           The people behind the Provincial Budget Office — dedicated to serving
           our Capiznons every day.
         </p>
@@ -105,7 +105,8 @@ img {
           <div class="row g-0">
             <div class="col-md-4">
               <div class="profile-section">
-                <img />
+                <img :src="lead.photo" v-if="lead.photo" />
+                <img src="/img/capiz-logo.png" v-else="" />
               </div>
             </div>
             <div class="col-md-8">
@@ -149,7 +150,18 @@ img {
         <div class="row row-cols-1 row-cols-md-3 g-4">
           <div class="col" v-for="(staff, index) in filteredStaff" :key="index">
             <div class="card shadow">
-              <img class="card-img-top" alt="..." />
+              <img
+                :src="staff.photo"
+                class="card-img-top"
+                v-if="staff.photo"
+                alt="..."
+              />
+              <img
+                src="/img/capiz-logo.png"
+                class="card-img-top"
+                v-else=""
+                alt="..."
+              />
               <div class="card-body text-center">
                 <h5 class="card-title uppercase">{{ staff.name }}</h5>
                 <p class="card-text uppercase">

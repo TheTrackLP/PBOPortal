@@ -1,8 +1,8 @@
 <script setup>
 import { supabase } from "@/lib/supabase";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
-const contactMode = ref(false);
+const contactMode = ref("create");
 const successMsg = ref("");
 const errorMsg = ref("");
 const formContactUs = ref({
@@ -13,31 +13,74 @@ const formContactUs = ref({
   map_url: "",
 });
 
-async function submitContactUs() {
-  contactMode.value = true;
-  successMsg.value = "";
-  errorMsg.value = "";
-  const { error } = await supabase.from("settings").insert({
-    name: formContactUs.value.name,
-    address: formContactUs.value.address,
-    contact: formContactUs.value.contact,
-    email: formContactUs.value.email,
-    map_url: formContactUs.value.map_url,
-  });
-
-  successMsg.value = "Contact Info Added Successfully";
+onMounted(async () => {
+  const { data: check, error } = await supabase
+    .from("settings")
+    .select("*")
+    .single();
 
   if (error) {
-    errorMsg.value = error.message;
+    console.error(error);
+  } else {
+    formContactUs.value = {
+      id: check.id ?? "",
+      name: check.name ?? "",
+      address: check.address ?? "",
+      contact: check.contact ?? "",
+      email: check.email ?? "",
+      map_url: check.map_url ?? "",
+    };
   }
+});
 
-  formContactUs.value = {
-    name: "",
-    address: "",
-    contact: "",
-    email: "",
-    map_url: "",
-  };
+async function submitContactUs() {
+  const { data: check, error } = await supabase
+    .from("settings")
+    .select("*")
+    .single();
+
+  if (!check) {
+    contactMode.value = true;
+    successMsg.value = "";
+    errorMsg.value = "";
+    const { error } = await supabase.from("settings").insert({
+      name: formContactUs.value.name,
+      address: formContactUs.value.address,
+      contact: formContactUs.value.contact,
+      email: formContactUs.value.email,
+      map_url: formContactUs.value.map_url,
+    });
+
+    successMsg.value = "Contact Info Added Successfully";
+
+    if (error) {
+      errorMsg.value = error.message;
+    }
+
+    contactMode.value = false;
+  } else {
+    contactMode.value = true;
+    successMsg.value = "";
+    errorMsg.value = "";
+    const { error } = await supabase
+      .from("settings")
+      .update({
+        name: formContactUs.value.name,
+        address: formContactUs.value.address,
+        contact: formContactUs.value.contact,
+        email: formContactUs.value.email,
+        map_url: formContactUs.value.map_url,
+      })
+      .eq("id", formContactUs.value.id);
+
+    successMsg.value = "Contact Info Updated Successfully";
+
+    if (error) {
+      errorMsg.value = error.message;
+    }
+
+    contactMode.value = false;
+  }
 }
 </script>
 <template>
@@ -54,6 +97,7 @@ async function submitContactUs() {
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label class="form-label">Office Name</label>
+                <input type="hidden" v-model="formContactUs.id" />
                 <input
                   type="text"
                   class="form-control"
@@ -111,7 +155,7 @@ async function submitContactUs() {
               </div>
             </div>
             <hr />
-            <div class="mb-3">
+            <!-- <div class="mb-3">
               <label class="form-label">Office Photo</label>
               <input type="file" class="form-control" accept="/img/settings" />
             </div>
@@ -134,7 +178,7 @@ async function submitContactUs() {
                 style="border: 0"
                 loading="lazy"
               ></iframe>
-            </div>
+            </div> -->
           </div>
 
           <div class="card-footer d-flex justify-content-end gap-2">

@@ -26,10 +26,12 @@ onMounted(async () => {
 <template>
   <div>
     <section class="hero">
-      <div class="container position-relative">
+      <div class="container text-center">
         <h1 class="font-display fw-bold">Contact Us</h1>
-        <p class="lead m-0">We would love to speak with you.</p>
-        <p class="lead m-0">Feel free to reach out using the below details.</p>
+        <p class="mb-0 text-white-50">We would love to speak with you.</p>
+        <p class="mb-0 text-white-50">
+          Feel free to reach out using the below details.
+        </p>
       </div>
     </section>
     <div class="">

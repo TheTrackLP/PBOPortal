@@ -27,7 +27,7 @@ const availableYears = computed(() => {
 </script>
 
 <template>
-  <section class="py-5" style="background: var(--navy, #123a56)">
+  <section class="py-5 hero">
     <div class="container text-center text-white">
       <h1 class="font-display fw-bold mb-2">Office Accomplishments</h1>
       <p class="mb-0 text-white-50">

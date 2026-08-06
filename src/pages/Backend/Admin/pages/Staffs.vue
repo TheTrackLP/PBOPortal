@@ -25,10 +25,15 @@ onMounted(async () => {
 
 const StaffLists = ref([]);
 async function fetchStaffLists() {
-  const { data, error } = await supabase.from("staff").select(`
+  const { data, error } = await supabase
+    .from("staff")
+    .select(
+      `
     *,
     divisions (name)
-  `);
+  `,
+    )
+    .order("order", { ascending: true });
   StaffLists.value = data;
 }
 onMounted(fetchStaffLists);
@@ -48,17 +53,51 @@ async function fetchStaff(staff) {
   submitStaffMode.value = "edit";
 }
 
+const selectPhotoFile = ref(null);
+const previewPhotoFile = ref(null);
+
+const handlePhotoView = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    selectPhotoFile.value = file;
+    previewPhotoFile.value = URL.createObjectURL(file);
+    staffForm.value.photo = file;
+  }
+};
+
 async function submitStaffData() {
   if (submitStaffMode.value === "create") {
     submitStaffMode.value = "create";
     successMsg.value = "";
     errorMsg.value = "";
 
+    if (!selectPhotoFile.value) {
+      errorMsg.value = "Please select a png file.";
+      return;
+    }
+
+    const fileName = `${selectPhotoFile.value.name}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("staff")
+      .upload(fileName, selectPhotoFile.value);
+
+    if (uploadError) {
+      errorMsg.value = uploadError.message;
+      return;
+    }
+
+    const { data: urlData } = supabase.storage
+      .from("staff")
+      .getPublicUrl(fileName);
+
+    const publicUrl = urlData.publicUrl;
+
     const { data, error } = await supabase.from("staff").insert({
       name: staffForm.value.name,
       position: staffForm.value.position,
       designation: staffForm.value.designation,
-      photo: staffForm.value.photo,
+      photo: publicUrl,
       category: staffForm.value.category,
       divisionid: staffForm.value.divisionid,
       is_active: 1,
@@ -84,10 +123,45 @@ async function submitStaffData() {
       divisionid: null,
       is_active: 1,
     };
+    previewPhotoFile.value = null;
   } else {
     submitStaffMode.value = "edit";
     successMsg.value = "";
     errorMsg.value = "";
+
+    if (!selectPhotoFile.value) {
+      const { error } = await supabase
+        .from("staff")
+        .update({
+          name: staffForm.value.name,
+          position: staffForm.value.position,
+          designation: staffForm.value.designation,
+          category: staffForm.value.category,
+          divisionid: staffForm.value.divisionid,
+          is_active: 1,
+        })
+        .eq("id", staffForm.value.id);
+
+      successMsg.value = "Staff Data Updated successfully!";
+      await fetchStaffLists();
+    }
+
+    const newFileUpdate = `${selectPhotoFile.value.name}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("staff")
+      .update(newFileUpdate, selectPhotoFile.value);
+
+    if (uploadError) {
+      errorMsg.value = uploadError.message;
+      return;
+    }
+
+    const { data: urlData } = supabase.storage
+      .from("staff")
+      .getPublicUrl(newFileUpdate);
+
+    const publicUrl = urlData.publicUrl;
 
     const { error } = await supabase
       .from("staff")
@@ -95,7 +169,7 @@ async function submitStaffData() {
         name: staffForm.value.name,
         position: staffForm.value.position,
         designation: staffForm.value.designation,
-        photo: staffForm.value.photo,
+        photo: publicUrl,
         category: staffForm.value.category,
         divisionid: staffForm.value.divisionid,
         is_active: 1,
@@ -121,6 +195,7 @@ async function submitStaffData() {
       divisionid: null,
       is_active: 1,
     };
+    previewPhotoFile.value = null;
   }
 }
 async function toggleActive(staff) {
@@ -161,11 +236,16 @@ async function toggleActive(staff) {
                       type="file"
                       accept="/img/staff/*"
                       class="form-control"
+                      @change="handlePhotoView"
                     />
                   </div>
-                  <div class="col-md-6 form-group mb-3">
+                  <div class="col-md-6 form-group mb-3" v-if="previewPhotoFile">
                     <label for=""></label>
-                    <img class="" width="200" />
+                    <img class="" :src="previewPhotoFile" width="200" />
+                  </div>
+                  <div class="col-md-6 form-group mb-3" v-else>
+                    <label for=""></label>
+                    <img class="" src="/img/capiz-logo.png" width="200" />
                   </div>
                 </div>
                 <div class="form-group mb-3">
@@ -253,12 +333,25 @@ async function toggleActive(staff) {
                 </thead>
                 <tbody>
                   <tr v-for="(staff, index) in StaffLists" :key="index">
-                    <td class="text-center align-middle">Order</td>
-                    <td class="text-center align-middle">Photo</td>
+                    <td class="text-center align-middle">order</td>
                     <td class="text-center align-middle">
+                      <img
+                        :src="staff.photo"
+                        alt=""
+                        width="100"
+                        v-if="staff.photo"
+                      />
+                      <img
+                        src="/img/capiz-logo.png"
+                        alt=""
+                        width="100"
+                        v-else=""
+                      />
+                    </td>
+                    <td class="uppercase align-middle">
                       {{ staff.name }}
                     </td>
-                    <td class="">
+                    <td class="uppercase">
                       <p>{{ staff.position }}</p>
                       <p>{{ staff.designation }}</p>
                     </td>
