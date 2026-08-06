@@ -20,59 +20,141 @@ function handleFileSelect(event) {
 }
 
 async function submitAccomplish() {
-  accomplishFormMode.value = "create";
-  errorMsg.value = "";
-  successMsg.value = "";
+  if (accomplishFormMode.value === "create") {
+    accomplishFormMode.value = "create";
+    errorMsg.value = "";
+    successMsg.value = "";
 
-  if (!selectedFile.value) {
-    errorMsg.value = "Please select a PDF file.";
-    return;
+    if (!selectedFile.value) {
+      errorMsg.value = "Please select a PDF file.";
+      return;
+    }
+
+    const fileName = `${Date.now()}_${selectedFile.value.name}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("accomplishments")
+      .upload(fileName, selectedFile.value);
+
+    if (uploadError) {
+      errorMsg.value = uploadError.message;
+      return;
+    }
+
+    const { data: urlData } = supabase.storage
+      .from("accomplishments")
+      .getPublicUrl(fileName);
+
+    const publicUrl = urlData.publicUrl;
+
+    const { error: insertError } = await supabase
+      .from("accomplishments")
+      .insert({
+        title: accomplishForm.value.title,
+        year: accomplishForm.value.year,
+        file: publicUrl,
+        order: accomplishForm.value.order,
+      });
+
+    if (insertError) {
+      errorMsg.value = insertError.message;
+      return;
+    }
+    accomplishFormMode.value = "create";
+
+    successMsg.value = "Accomplishment added successfully!";
+    await fetchAccomplishments();
+
+    accomplishForm.value = {
+      title: "",
+      year: "",
+      file: "",
+      order: "",
+    };
+  } else {
+    accomplishFormMode.value = "edit";
+    errorMsg.value = "";
+    successMsg.value = "";
+
+    if (!selectedFile.value) {
+      const { error: UpdateDataNoFIle } = await supabase
+        .from("accomplishments")
+        .update({
+          title: accomplishForm.value.title,
+          year: accomplishForm.value.year,
+          order: accomplishForm.value.order,
+        })
+        .eq("id", accomplishForm.value.id);
+      successMsg.value = "Accomplishment Updated successfully!";
+      await fetchAccomplishments();
+    }
+
+    const newFileUpdate = `${selectedFile.value.name}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("accomplishments")
+      .update(newFileUpdate, selectedFile.value);
+
+    if (uploadError) {
+      errorMsg.value = uploadError.message;
+      return;
+    }
+
+    const { data: urlData } = supabase.storage
+      .from("accomplishments")
+      .getPublicUrl(newFileUpdate);
+
+    const publicUrl = urlData.publicUrl;
+
+    const { error: UpdateErrorData } = await supabase
+      .from("accomplishments")
+      .update({
+        title: accomplishForm.value.title,
+        year: accomplishForm.value.year,
+        file: publicUrl,
+        order: accomplishForm.value.order,
+      })
+      .eq("id", accomplishForm.value.id);
+
+    if (UpdateErrorData) {
+      errorMsg.value = UpdateErrorData.message;
+      return;
+    }
+    accomplishFormMode.value = "create";
+
+    successMsg.value = "Accomplishment Updated successfully!";
+    await fetchAccomplishments();
+
+    accomplishForm.value = {
+      title: "",
+      year: "",
+      file: "",
+      order: "",
+    };
   }
+}
 
-  const fileName = `${Date.now()}_${selectedFile.value.name}`;
-
-  const { error: uploadError } = await supabase.storage
+async function fetchAccomplishData(row) {
+  const { data, error } = await supabase
     .from("accomplishments")
-    .upload(fileName, selectedFile.value);
-
-  if (uploadError) {
-    errorMsg.value = uploadError.message;
+    .select("*")
+    .eq("id", row.id)
+    .single();
+  if (error) {
+    errorMsg.value = error.message;
     return;
   }
 
-  const { data: urlData } = supabase.storage
-    .from("accomplishments")
-    .getPublicUrl(fileName);
-
-  const publicUrl = urlData.publicUrl;
-
-  const { error: insertError } = await supabase.from("accomplishments").insert({
-    title: accomplishForm.value.title,
-    year: accomplishForm.value.year,
-    file: publicUrl,
-    order: accomplishForm.value.order,
-  });
-
-  if (insertError) {
-    errorMsg.value = insertError.message;
-    return;
-  }
-  accomplishFormMode.value = "create";
-
-  successMsg.value = "Accomplishment added successfully!";
-  await fetchAccomplishments();
-
-  accomplishForm.value = {
-    title: "",
-    year: "",
-    file: "",
-    order: "",
-  };
+  accomplishForm.value = data;
+  accomplishFormMode.value = "edit";
 }
 
 const accomplishList = ref([]);
 async function fetchAccomplishments() {
-  const { data, error } = await supabase.from("accomplishments").select("*");
+  const { data, error } = await supabase
+    .from("accomplishments")
+    .select("*")
+    .order("order", { ascending: false });
   accomplishList.value = data;
 }
 onMounted(fetchAccomplishments);
@@ -98,6 +180,7 @@ onMounted(fetchAccomplishments);
                   v-model="accomplishForm.title"
                   required
                 />
+                <input type="hidden" v-model="accomplishForm.id" />
               </div>
               <div class="form-group mb-3">
                 <label for="">Year:</label>
@@ -118,7 +201,6 @@ onMounted(fetchAccomplishments);
                   class="form-control"
                   accept="application/pdf"
                   @change="handleFileSelect"
-                  required
                 />
                 <small class="text-muted"
                   >Upload the report PDF (max size TBD)</small
@@ -173,7 +255,10 @@ onMounted(fetchAccomplishments);
                   </td>
                   <td class="align-middle text-center">{{ row.order }}</td>
                   <td class="align-middle text-center">
-                    <button class="btn btn-warning btn-sm me-1">
+                    <button
+                      class="btn btn-warning btn-sm me-1"
+                      @click="fetchAccomplishData(row)"
+                    >
                       <i class="bi bi-pencil-square"></i>
                     </button>
                     <button class="btn btn-danger btn-sm">
