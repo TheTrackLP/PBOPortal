@@ -1,6 +1,6 @@
 <script setup>
 import { supabase } from "@/lib/supabase";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 const divList = ref([]);
 
@@ -27,6 +27,22 @@ async function fetchStaffs() {
     .order("order", { ascending: true });
   staffList.value = data;
 }
+
+const selectedDivision = ref("all");
+
+function selectDivision(id) {
+  selectedDivision.value = id;
+}
+
+const filteredStaff = computed(() => {
+  if (selectedDivision.value === "all") {
+    return staffList.value;
+  } else {
+    return staffList.value.filter(
+      (d) => d.divisionid === selectedDivision.value,
+    );
+  }
+});
 
 onMounted(fetchHeadActing);
 onMounted(fetchStaffs);
@@ -108,13 +124,19 @@ img {
     <section class="pb-5">
       <div class="container">
         <div class="filter-pills float-end">
-          <button @click="selectDivision('all')" class="filter-pill">
+          <button
+            @click="selectDivision('all')"
+            class="filter-pill"
+            :class="{ active: selectedDivision === 'all' }"
+          >
             All
           </button>
           <button
             class="filter-pill"
             v-for="(div, index) in divList"
             :key="index"
+            @click="selectDivision(div.id)"
+            :class="{ active: selectedDivision === div.id }"
           >
             {{ div.name }}
           </button>
@@ -125,7 +147,7 @@ img {
     <section class="pb-5">
       <div class="container">
         <div class="row row-cols-1 row-cols-md-3 g-4">
-          <div class="col" v-for="(staff, index) in staffList" :key="index">
+          <div class="col" v-for="(staff, index) in filteredStaff" :key="index">
             <div class="card shadow">
               <img class="card-img-top" alt="..." />
               <div class="card-body text-center">
