@@ -17,7 +17,9 @@ onMounted(async () => {
 
 <style>
 .contact-img {
-  width: 50rem;
+  width: 100%;
+  max-width: 50rem;
+  height: auto;
   object-fit: cover;
   border-radius: 0.5rem;
 }
@@ -40,7 +42,7 @@ onMounted(async () => {
           <img
             src="/img/capiz.jpg"
             alt="Capiz Provincial Seal"
-            class="contact-img"
+            class="contact-img img-fluid"
           />
         </div>
         <div class="col-md-6 d-flex align-items-center">
