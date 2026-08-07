@@ -16,7 +16,8 @@ async function fetchHeadActing() {
     .from("staff")
     .select("*")
     .in("category", ["head", "acting_head"])
-    .order("order", { ascending: true });
+    .order("order", { ascending: true })
+    .eq("is_active", true);
   headcActingList.value = data;
 }
 async function fetchStaffs() {
@@ -24,7 +25,9 @@ async function fetchStaffs() {
     .from("staff")
     .select("*")
     .eq("category", "staff")
-    .order("order", { ascending: true });
+    .order("order", { ascending: true })
+    .eq("is_active", true);
+
   staffList.value = data;
 }
 

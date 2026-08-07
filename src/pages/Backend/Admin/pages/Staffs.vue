@@ -49,6 +49,32 @@ async function onDragEnd() {
   const updates = StaffLists.value.map((item, index) =>
     supabase.from("staff").update({ order: index }).eq("id", item.id),
   );
+  // for (const [index, item] of StaffLists.value.entries()) {
+  //   const { data: checkOrder } = await supabase
+  //     .from("staff")
+  //     .select("*")
+  //     .eq("id", item.id)
+  //     .single();
+
+  //   if (checkOrder.order === 0 && checkOrder.is_active === true) {
+  //     await supabase
+  //       .from("staff")
+  //       .update({ category: "head" })
+  //       .eq("id", item.id)
+  //       .single();
+  //   }
+  //   if (checkOrder.order === 1 && checkOrder.is_active === true) {
+  //     await supabase
+  //       .from("staff")
+  //       .update({ category: "acting_head" })
+  //       .eq("id", item.id)
+  //       .single();
+  //   }
+  //   const { error } = await supabase
+  //     .from("staff")
+  //     .update({ order: index })
+  //     .eq("id", item.id);
+  // }
   await Promise.all(updates);
   await fetchStaffLists();
 }
