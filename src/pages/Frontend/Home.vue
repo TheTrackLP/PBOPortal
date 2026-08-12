@@ -243,7 +243,10 @@ img {
         class="spotlight d-flex flex-column flex-md-row align-items-center gap-4"
       >
         <div class="spotlight-photo flex-shrink-0">
-          <i class="bi bi-person-fill"></i>
+          <img
+            :src="fetchHead?.photo || '/img/capiz-logo.png'"
+            :alt="fetchHead?.name || 'Staff photo'"
+          />
         </div>
         <div class="">
           <div class="fw-bold uppercase">{{ fetchHead?.name }}</div>
