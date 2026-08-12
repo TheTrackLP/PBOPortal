@@ -5,6 +5,18 @@ import { onMounted, ref } from "vue";
 const fetchAbout = ref(null);
 const fetchAccomplishList = ref([]);
 const fetchHead = ref(null);
+const fetchNews = ref([]);
+const expandNews = ref(false);
+
+//Method 2 for limit content text
+// const limit = 150
+
+// const displayText = computed(() => {
+//   if (expanded.value || newsItem.content.length <= limit) {
+//     return newsItem.content
+//   }
+//   return newsItem.content.slice(0, limit) + '...'
+// })
 
 onMounted(async () => {
   const { data, error } = await supabase
@@ -27,6 +39,14 @@ onMounted(async () => {
     .single();
 
   fetchHead.value = head;
+
+  const { data: news } = await supabase
+    .from("news")
+    .select("*")
+    .limit(3)
+    .order("published_date", { ascending: false })
+    .eq("is_published", true);
+  fetchNews.value = news;
 });
 </script>
 <style scoped>
@@ -38,6 +58,12 @@ img {
 }
 .card {
   border: 0px !important;
+}
+.text-truncate-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 </style>
 <template>
@@ -204,33 +230,57 @@ img {
         ></a>
       </div>
       <div class="row g-4">
-        <div class="col-md-4">
+        <div class="col-md-4" v-for="(news, index) in fetchNews" :key="index">
           <div class="news-card">
-            <div class="news-thumb"></div>
-            <div class="p-3">
-              <div class="news-date">July 20, 2026</div>
-              <h6 class="fw-bold mt-1">Example</h6>
-              <p class="text-secondary small mb-0">Example</p>
+            <div class="news-thumb">
+              <img
+                :src="news.cover_image"
+                :alt="news.title"
+                class="w-100 h-100"
+                style="object-fit: fill"
+                v-if="news.cover_image"
+              />
+              <img
+                src="/img/capiz-logo.png"
+                :alt="news.title"
+                class="w-100 h-100"
+                style="object-fit: fill"
+                v-else
+              />
             </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="news-card">
-            <div class="news-thumb"></div>
             <div class="p-3">
-              <div class="news-date">July 12, 2026</div>
-              <h6 class="fw-bold mt-1">Example</h6>
-              <p class="text-secondary small mb-0">Example.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="news-card">
-            <div class="news-thumb"></div>
-            <div class="p-3">
-              <div class="news-date">July 3, 2026</div>
-              <h6 class="fw-bold mt-1">Example</h6>
-              <p class="text-secondary small mb-0">Example.</p>
+              <div class="news-date">
+                {{
+                  new Date(news.published_date).toLocaleDateString("en-us", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })
+                }}
+              </div>
+              <h6 class="fw-bold mt-1">{{ news.title }}</h6>
+              <p
+                class="text-secondary small mb-0"
+                :class="{ 'text-truncate-3': !expanded }"
+              >
+                {{ news.content }}
+              </p>
+              <router-link
+                :to="{ name: 'NewsView', params: { title: news.title } }"
+                class="small fw-semibold"
+                style="color: var(--navy, #123a56)"
+                >Read more →</router-link
+              >
+
+              <!-- //Method 2 for limit content text -->
+              <!-- <p>{{ displayText }}</p>
+              <button
+                v-if="newsItem.content.length > limit"
+                class="btn btn-link btn-sm p-0"
+                @click="expanded = !expanded"
+              >
+                {{ expanded ? "See less" : "See more" }}
+              </button> -->
             </div>
           </div>
         </div>

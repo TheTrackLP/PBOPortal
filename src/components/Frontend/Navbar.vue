@@ -67,6 +67,11 @@ const officeSettings = inject("officeSettings");
             >
           </li>
           <li class="nav-item">
+            <router-link to="/news" active-class="active" class="nav-link"
+              >News</router-link
+            >
+          </li>
+          <li class="nav-item">
             <router-link to="/staff" active-class="active" class="nav-link"
               >Staff</router-link
             >
@@ -81,9 +86,6 @@ const officeSettings = inject("officeSettings");
           </li>
           <!-- <li class="nav-item">
             <a class="nav-link" href="#">Services</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">News</a>
           </li> -->
           <li class="nav-item">
             <router-link to="/contactus" active-class="active" class="nav-link"

@@ -123,9 +123,14 @@ body {
   border: 1px solid #e7eaf1;
   height: 100%;
 }
+.news-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(20, 33, 61, 0.08);
+}
 .news-thumb {
-  height: 160px;
+  height: 200px;
   background: linear-gradient(135deg, #dfe4ee, #c8cfdf);
+  overflow: hidden;
 }
 .news-date {
   color: #8b96b0;

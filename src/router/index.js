@@ -27,6 +27,16 @@ const routes = [
         component: () => import("@/pages/Frontend/CitizenCharter.vue"),
       },
       {
+        path: "news",
+        name: "News",
+        component: () => import("@/pages/Frontend/News/Index.vue"),
+      },
+      {
+        path: "news/:title",
+        name: "NewsView",
+        component: () => import("@/pages/Frontend/News/View.vue"),
+      },
+      {
         path: "staff",
         name: "Staff",
         component: () => import("@/pages/Frontend/Staff.vue"),
