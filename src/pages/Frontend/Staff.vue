@@ -108,8 +108,8 @@ img {
           <div class="row g-0">
             <div class="col-md-4">
               <div class="profile-section">
-                <img :src="lead.photo" v-if="lead.photo" />
-                <img src="/img/capiz-logo.png" v-else="" />
+                <img :src="lead.photo" v-if="lead.photo" loading="lazy" />
+                <img src="/img/capiz-logo.png" v-else="" loading="lazy" />
               </div>
             </div>
             <div class="col-md-8">
@@ -158,16 +158,18 @@ img {
                 class="card-img-top"
                 v-if="staff.photo"
                 alt="..."
+                loading="lazy"
               />
               <img
                 src="/img/capiz-logo.png"
                 class="card-img-top"
                 v-else=""
                 alt="..."
+                loading="lazy"
               />
               <div class="card-body text-center">
                 <h5 class="card-title uppercase">{{ staff.name }}</h5>
-                <p class="card-text uppercase">
+                <p class="card-text uppercase mb-0">
                   <strong>{{ staff.position }}</strong>
                 </p>
                 <p class="card-text uppercase">({{ staff.designation }})</p>

@@ -36,6 +36,7 @@ const officeSettings = inject("officeSettings");
             officeSettings?.name
           }}</strong>
           <small>{{ officeSettings?.address }}</small>
+          <small>{{ officeSettings?.room }}</small>
         </span>
       </a>
       <button

@@ -68,9 +68,15 @@ onMounted(async () => {
           <ul class="list-unstyled mx-5">
             <li class="d-flex align-items-center mb-3">
               <div>
-                <strong>Address</strong><br />
-                <i class="fa-solid fa-location-dot"></i>
-                {{ contactData?.address }}
+                <strong>
+                  <i class="fa-solid fa-location-dot"></i> Address</strong
+                >
+                <p class="mb-0">
+                  {{ contactData?.address }}
+                </p>
+                <p class="mb-0">
+                  {{ contactData?.room }}
+                </p>
               </div>
             </li>
           </ul>
