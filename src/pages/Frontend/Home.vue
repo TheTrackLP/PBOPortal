@@ -258,19 +258,20 @@ img {
                   })
                 }}
               </div>
-              <h6 class="fw-bold mt-1">{{ news.title }}</h6>
+              <h6 class="fw-bold mt-1">
+                <router-link
+                  :to="{ name: 'NewsView', params: { title: news.title } }"
+                  class="small fw-semibold"
+                  style="color: var(--navy, #123a56)"
+                  >{{ news.title }}</router-link
+                >
+              </h6>
               <p
                 class="text-secondary small mb-0"
                 :class="{ 'text-truncate-3': !expanded }"
               >
                 {{ news.content }}
               </p>
-              <router-link
-                :to="{ name: 'NewsView', params: { title: news.title } }"
-                class="small fw-semibold"
-                style="color: var(--navy, #123a56)"
-                >Read more →</router-link
-              >
 
               <!-- //Method 2 for limit content text -->
               <!-- <p>{{ displayText }}</p>
