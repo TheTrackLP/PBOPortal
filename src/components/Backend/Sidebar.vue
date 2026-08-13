@@ -55,6 +55,12 @@ async function handleLogout() {
         ><i class="bi bi-tools"></i> Citizen Charter</router-link
       >
       <router-link
+        to="/admin/benefits"
+        active-class="active"
+        class="nav-link-custom"
+        ><i class="bi bi-tools"></i> Benefits</router-link
+      >
+      <router-link
         to="/admin/about"
         active-class="active"
         class="nav-link-custom"

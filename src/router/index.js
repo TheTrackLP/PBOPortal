@@ -27,6 +27,11 @@ const routes = [
         component: () => import("@/pages/Frontend/CitizenCharter.vue"),
       },
       {
+        path: "benefits",
+        name: "Benefits",
+        component: () => import("@/pages/Frontend/Benefits.vue"),
+      },
+      {
         path: "news",
         name: "News",
         component: () => import("@/pages/Frontend/News/Index.vue"),
@@ -81,6 +86,11 @@ const routes = [
         path: "about",
         name: "AdminAbout",
         component: () => import("@/pages/Backend/Admin/pages/About.vue"),
+      },
+      {
+        path: "benefits",
+        name: "AdminBenefits",
+        component: () => import("@/pages/Backend/Admin/pages/Benefits.vue"),
       },
       {
         path: "settings",

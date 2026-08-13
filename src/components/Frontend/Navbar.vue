@@ -78,6 +78,11 @@ const officeSettings = inject("officeSettings");
             >
           </li>
           <li class="nav-item">
+            <router-link to="/benefits" active-class="active" class="nav-link"
+              >Legal Bases</router-link
+            >
+          </li>
+          <li class="nav-item">
             <router-link
               to="/citizencharter"
               active-class="active"
