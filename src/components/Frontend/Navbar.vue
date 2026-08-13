@@ -29,7 +29,7 @@ const officeSettings = inject("officeSettings");
 
   <nav class="navbar navbar-expand-lg navbar-office py-3">
     <div class="container">
-      <a class="navbar-brand" href="#">
+      <router-link class="navbar-brand" to="/">
         <img src="/img/capiz-logo.png" class="brand-seal" alt="..." />
         <span class="brand-text">
           <strong class="font-display text-white">{{
@@ -38,7 +38,7 @@ const officeSettings = inject("officeSettings");
           <small>{{ officeSettings?.address }}</small>
           <small>{{ officeSettings?.room }}</small>
         </span>
-      </a>
+      </router-link>
       <button
         class="navbar-toggler"
         type="button"

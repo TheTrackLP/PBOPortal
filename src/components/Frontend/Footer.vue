@@ -22,7 +22,7 @@ const officeSettings = inject("officeSettings");
         <div class="col-md-4">
           <h6 class="font-display mb-3">Quick Links</h6>
           <ul class="list-unstyled">
-            <li class="mb-2"><router-link to="/home">Home</router-link></li>
+            <li class="mb-2"><router-link to="/">Home</router-link></li>
             <li class="mb-2"><router-link to="/about">About</router-link></li>
             <li class="mb-2">
               <router-link to="/accomplishments">Accomplishments</router-link>

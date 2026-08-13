@@ -12,6 +12,8 @@ onMounted(async () => {
     .single();
 
   contactData.value = data;
+
+  console.log(data);
 });
 </script>
 
@@ -20,8 +22,7 @@ onMounted(async () => {
   width: 100%;
   max-width: 50rem;
   height: auto;
-  object-fit: cover;
-  border-radius: 0.5rem;
+  object-fit: fill;
 }
 </style>
 
@@ -40,7 +41,7 @@ onMounted(async () => {
       <div class="row mx-3 my-3 mb-4 g-4">
         <div class="col-md-6 text-center">
           <img
-            src="/img/capiz.jpg"
+            :src="contactData?.photo || ''"
             alt="Capiz Provincial Seal"
             class="contact-img img-fluid"
           />

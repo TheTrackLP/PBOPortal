@@ -1,6 +1,6 @@
 <script setup>
 import { supabase } from "@/lib/supabase";
-import { onMounted, ref } from "vue";
+import { handleError, onMounted, ref } from "vue";
 
 const contactMode = ref("create");
 const successMsg = ref("");
@@ -29,9 +29,21 @@ onMounted(async () => {
       contact: check.contact ?? "",
       email: check.email ?? "",
       map_url: check.map_url ?? "",
+      photo: check.photo ?? "",
     };
   }
 });
+const selectedImage = ref(null);
+const previewSelectedPhoto = ref(null);
+
+const handlePhotoPreview = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    selectedImage.value = file;
+    previewSelectedPhoto.value = URL.createObjectURL(file);
+    formContactUs.value.photo = file
+  }
+};
 
 async function submitContactUs() {
   const { data: check, error } = await supabase
@@ -43,11 +55,36 @@ async function submitContactUs() {
     contactMode.value = true;
     successMsg.value = "";
     errorMsg.value = "";
+
+    const fileName = `${selectedImage.value.name}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("settings")
+      .upload(fileName, selectedImage.value);
+
+    if (uploadError) {
+      const resultSuccess = await Swal.fire({
+        title: "Error!",
+        text: "Error, Try Again inserting an image!",
+        icon: "error",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+      return;
+    }
+
+    const { data: urlData } = supabase.storage
+      .from("settings")
+      .getPublicUrl(fileName);
+
+    const publicUrl = urlData.publicUrl;
+
     const { error } = await supabase.from("settings").insert({
       name: formContactUs.value.name,
       address: formContactUs.value.address,
       contact: formContactUs.value.contact,
       email: formContactUs.value.email,
+      photo: publicUrl,
       map_url: formContactUs.value.map_url,
     });
 
@@ -62,6 +99,29 @@ async function submitContactUs() {
     contactMode.value = true;
     successMsg.value = "";
     errorMsg.value = "";
+    const fileName = `${selectedImage.value.name}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("settings")
+      .update(fileName, selectedImage.value);
+
+    if (uploadError) {
+      const resultSuccess = await Swal.fire({
+        title: "Error!",
+        text: "Error, Try Again inserting an image!",
+        icon: "error",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+      return;
+    }
+
+    const { data: urlData } = supabase.storage
+      .from("settings")
+      .getPublicUrl(fileName);
+
+    const publicUrl = urlData.publicUrl;
+
     const { error } = await supabase
       .from("settings")
       .update({
@@ -69,6 +129,7 @@ async function submitContactUs() {
         address: formContactUs.value.address,
         contact: formContactUs.value.contact,
         email: formContactUs.value.email,
+        photo: publicUrl,
         map_url: formContactUs.value.map_url,
       })
       .eq("id", formContactUs.value.id);
@@ -155,32 +216,40 @@ async function submitContactUs() {
               </div>
             </div>
             <hr />
-            <!-- <div class="mb-3">
+            <div class="mb-3">
               <label class="form-label">Office Photo</label>
-              <input type="file" class="form-control" accept="/img/settings" />
+              <input
+                type="file"
+                class="form-control"
+                accept="/img/*"
+                @change="handlePhotoPreview"
+              />
             </div>
             <div class="mb-4">
               <label class="form-label d-block">Preview</label>
-              <iframe
-                src=""
+              <img
+                :src="previewSelectedPhoto"
                 width="100%"
-                height="300"
-                style="border: 0"
-                loading="lazy"
-              ></iframe>
+                height="500"
+                style="object-fit: fill;"
+                loading="lazy" v-if="previewSelectedPhoto"
+              ></img>
+              <img
+                :src="formContactUs.photo"
+                width="100%"
+                height="500"
+                style="object-fit: fill;"
+                loading="lazy" v-else-if="formContactUs.photo"
+              ></img>
+              <img
+                src="/img/capiz-logo.png"
+                width="100%"
+                height="500"
+                style="object-fit: fill;"
+                loading="lazy" v-else
+              ></img>
             </div>
-            <div class="mb-4">
-              <label class="form-label d-block">Preview</label>
-              <iframe
-                src=""
-                width="100%"
-                height="300"
-                style="border: 0"
-                loading="lazy"
-              ></iframe>
-            </div> -->
           </div>
-
           <div class="card-footer d-flex justify-content-end gap-2">
             <button type="submit" class="btn btn-primary">Save Settings</button>
           </div>

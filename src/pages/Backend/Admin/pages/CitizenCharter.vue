@@ -1,13 +1,11 @@
 <script setup>
 import { supabase } from "@/lib/supabase";
 import { onMounted, ref } from "vue";
+import Swal from "sweetalert2";
 
 const selectedCharter = ref(null);
 const fetchCharterList = ref([]);
-
 const charterMode = ref("create");
-const successMsg = ref("");
-const errorMsg = ref("");
 
 function handleFileSelected(event) {
   selectedCharter.value = event.target.files[0];
@@ -28,22 +26,32 @@ onMounted(fetchCitizenCharter);
 
 async function submitCitizenCharter() {
   charterMode.value = "create";
-  errorMsg.value = "";
-  successMsg.value = "";
 
   if (!selectedCharter.value) {
-    errorMsg.value = "Please select a PDF file.";
+    const resultError = await Swal.fire({
+      title: "Error!",
+      text: "Please select a PDF file.",
+      icon: "error",
+      timer: 1000,
+      showConfirmButton: false,
+    });
     return;
   }
 
-  const fileName = `${Date.now()}_${formCitizenCharter.value.title}_${formCitizenCharter.value.edition}`;
+  const fileName = `${formCitizenCharter.value.title}_${formCitizenCharter.value.edition}`;
 
   const { error: uploadError } = await supabase.storage
     .from("citizens_charter")
     .upload(fileName, selectedCharter.value);
 
   if (uploadError) {
-    errorMsg.value = uploadError.message;
+    const resultSuccess = await Swal.fire({
+      title: "Error!",
+      text: "Error, Try Again!",
+      icon: "success",
+      timer: 100,
+      showConfirmButton: false,
+    });
     return;
   }
 
@@ -63,14 +71,25 @@ async function submitCitizenCharter() {
     });
 
   if (insertError) {
-    errorMsg.value = insertError.message;
+    const resultSuccess = await Swal.fire({
+      title: "Success!",
+      text: "Error, Try Again inserting Form",
+      icon: "success",
+      timer: 1000,
+      showConfirmButton: false,
+    });
     return;
   }
   charterMode.value = "create";
   await fetchCitizenCharter();
 
-  successMsg.value = "Citizen Charter added successfully!";
-
+  const resultSuccess = await Swal.fire({
+    title: "Success!",
+    text: "Citizen Charter Added Successfully",
+    icon: "success",
+    timer: 1000,
+    showConfirmButton: false,
+  });
   formCitizenCharter.value = {
     title: "",
     edition: "",
@@ -88,19 +107,29 @@ async function toggleCurrent(chart) {
     .eq("id", chart.id);
 
   if (error) {
-    errorMsg.value = error.message;
+    const resultSuccess = await Swal.fire({
+      title: "Success!",
+      text: "Staff Status Changed",
+      icon: "success",
+      timer: 1000,
+      showConfirmButton: false,
+    });
     return;
   }
 
   chart.is_current = newCurrent;
-  successMsg.value = "Current Edition Changed";
+  const resultSuccess = await Swal.fire({
+    title: "Success!",
+    text: "Citizen Charter Status Changed",
+    icon: "success",
+    timer: 1000,
+    showConfirmButton: false,
+  });
 }
 </script>
 
 <template>
   <div class="container-fluid">
-    <div v-if="successMsg" class="alert alert-success">{{ successMsg }}</div>
-    <div v-if="errorMsg" class="alert alert-danger">{{ errorMsg }}</div>
     <div class="row mt-4">
       <div class="col-md-4">
         <form @submit.prevent="submitCitizenCharter">
@@ -192,7 +221,13 @@ async function toggleCurrent(chart) {
                     >
                   </td>
                   <td class="text-center">
-                    {{ new Date(chart.created_at).toLocaleDateString() }}
+                    {{
+                      new Date(chart.created_at).toLocaleDateString("en-us", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })
+                    }}
                   </td>
                   <td class="text-center">
                     <button
@@ -211,8 +246,8 @@ async function toggleCurrent(chart) {
                     >
                       <i class="fa-solid fa-circle-xmark"></i>
                     </button>
-                    <button class="btn btn-danger btn-sm">
-                      <i class="bi bi-trash"></i>
+                    <button class="btn btn-warning btn-sm">
+                      <i class="fa-solid fa-pen-to-square"></i>
                     </button>
                   </td>
                 </tr>

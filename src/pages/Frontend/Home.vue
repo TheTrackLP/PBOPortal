@@ -163,7 +163,7 @@ img {
       </div>
     </div>
   </section>
-  <section class="py-5">
+  <!-- <section class="py-5">
     <div class="container">
       <div class="text-center mb-5">
         <div class="section-eyebrow">What We Offer</div>
@@ -210,8 +210,8 @@ img {
         </div>
       </div>
     </div>
-  </section>
-  <section class="py-5" style="background: #eef0f5">
+  </section> -->
+  <section class="py-5">
     <div class="container">
       <div
         class="d-flex justify-content-between align-items-end mb-5 flex-wrap gap-2"
@@ -222,12 +222,12 @@ img {
             Latest News & Announcements
           </h2>
         </div>
-        <a
-          href="#"
+        <router-link
+          to="/news"
           class="text-decoration-none fw-semibold"
           style="color: var(--navy)"
           >View all <i class="bi bi-arrow-right"></i
-        ></a>
+        ></router-link>
       </div>
       <div class="row g-4">
         <div class="col-md-4" v-for="(news, index) in fetchNews" :key="index">
@@ -288,7 +288,7 @@ img {
       </div>
     </div>
   </section>
-  <section class="py-5">
+  <section class="py-5" style="background: #eef0f5">
     <div class="container">
       <div
         class="spotlight d-flex flex-column flex-md-row align-items-center gap-4"

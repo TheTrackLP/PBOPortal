@@ -342,6 +342,7 @@ async function toggleActive(staff) {
                       class="form-control"
                       @change="handlePhotoView"
                     />
+                    <small>Change the image extension to .PNG</small>
                   </div>
                   <div class="col-md-6 form-group mb-3" v-if="previewPhotoFile">
                     <label for=""></label>
@@ -465,7 +466,7 @@ async function toggleActive(staff) {
                         />
                       </td>
                       <td class="align-middle uppercase">
-                        {{ staff.name }}
+                        <strong>{{ staff.name }}</strong>
                       </td>
                       <td class="align-middle uppercase">
                         <p class="mb-0">
@@ -494,14 +495,14 @@ async function toggleActive(staff) {
                       <td class="align-middle text-center">
                         <button
                           type="button"
-                          class="btn btn-warning"
+                          class="btn btn-warning btn-sm"
                           @click="fetchStaff(staff)"
                         >
                           <i class="fa-solid fa-pen-to-square"></i>
                         </button>
                         <button
                           type="button"
-                          class="btn btn-success"
+                          class="btn btn-success btn-sm"
                           @click="toggleActive(staff)"
                           v-if="staff.is_active === true"
                         >
@@ -509,7 +510,7 @@ async function toggleActive(staff) {
                         </button>
                         <button
                           type="button"
-                          class="btn btn-danger"
+                          class="btn btn-danger btn-sm"
                           @click="toggleActive(staff)"
                           v-else-if="staff.is_active === false"
                         >
