@@ -1,6 +1,6 @@
 <script setup>
 import { supabase } from "@/lib/supabase";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import Swal from "sweetalert2";
 import draggable from "vuedraggable";
 
@@ -47,7 +47,10 @@ async function onDragEnd() {
     showConfirmButton: false,
   });
   const updates = StaffLists.value.map((item, index) =>
-    supabase.from("staff").update({ order: index }).eq("id", item.id),
+    supabase
+      .from("staff")
+      .update({ order: index + 1 })
+      .eq("id", item.id),
   );
   // for (const [index, item] of StaffLists.value.entries()) {
   //   const { data: checkOrder } = await supabase
@@ -319,7 +322,35 @@ async function toggleActive(staff) {
     showConfirmButton: false,
   });
 }
+
+// const filteredName = ref("");
+// const filteredDiv = ref("");
+
+// const filetedList = computed(() => {
+//   const nameQuery = filteredName.value.toLowerCase().trim();
+//   const divisionQuery = filteredDiv.value;
+
+//   return StaffLists.value.filter((item) => {
+//     const matchesName =
+//       !nameQuery || item.name.toLowerCase().includes(nameQuery);
+
+//     const matchesDivision = !divisionQuery || item.divisionid === divisionQuery;
+
+//     return matchesName && matchesDivision;
+//   });
+// });
 </script>
+
+<style scoped>
+.table-responsive {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+.table-responsive th {
+  position: sticky;
+  top: 0;
+}
+</style>
 <template>
   <div>
     <div class="container-fluid">
@@ -424,103 +455,129 @@ async function toggleActive(staff) {
               <h3>Staff Directory</h3>
             </div>
             <div class="card-body">
-              <table class="table table-bordered table-hover">
-                <thead class="table-dark">
-                  <tr>
-                    <th class="text-center">Order</th>
-                    <th class="text-center">Photo</th>
-                    <th class="text-center">Name</th>
-                    <th class="text-center">Position/Designation</th>
-                    <th class="text-center">Division</th>
-                    <th class="text-center">Status</th>
-                    <th class="text-center">Action</th>
-                  </tr>
-                </thead>
-                <draggable
-                  v-model="StaffLists"
-                  item-key="id"
-                  tag="tbody"
-                  @end="onDragEnd"
-                  handle=".drag-handle"
-                >
-                  <template #item="{ element: staff, index }">
+              <!-- <div class="row mb-4">
+                <div class="col-md-4">
+                  <label for="">Name:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter name..."
+                    v-model="filteredName"
+                  />
+                </div>
+                <div class="col-md-4">
+                  <label for="">Division</label>
+                  <select v-model="filteredDiv" class="form-select">
+                    <option value="">Select an Option</option>
+                    <option
+                      v-for="(div, index) in divData"
+                      :key="index"
+                      :value="div.id"
+                    >
+                      {{ div.name }}
+                    </option>
+                  </select>
+                </div>
+              </div> -->
+              <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                  <thead class="table-dark">
                     <tr>
-                      <td
-                        class="drag-handle text-center align-middle"
-                        style="cursor: grab"
-                      >
-                        ☰
-                      </td>
-                      <td class="align-middle text-center">
-                        <img
-                          :src="`${staff.photo}`"
-                          alt=""
-                          v-if="staff.photo"
-                          width="100"
-                        />
-                        <img
-                          src="/img/capiz-logo.png"
-                          alt=""
-                          width="100"
-                          v-else
-                        />
-                      </td>
-                      <td class="align-middle uppercase">
-                        <strong>{{ staff.name }}</strong>
-                      </td>
-                      <td class="align-middle uppercase">
-                        <p class="mb-0">
-                          <strong>{{ staff.position }}</strong>
-                        </p>
-                        <p class="mb-0" v-if="staff.designation">
-                          ({{ staff.designation }})
-                        </p>
-                        <p class="mb-0" v-else></p>
-                      </td>
-                      <td class="align-middle text-center">
-                        {{ staff.divisions?.name }}
-                      </td>
-                      <td class="align-middle text-center">
-                        <span
-                          class="badge text-bg-success"
-                          v-if="staff.is_active === true"
-                          >Active</span
-                        >
-                        <span
-                          class="badge text-bg-danger"
-                          v-if="staff.is_active === false"
-                          >Inactive</span
-                        >
-                      </td>
-                      <td class="align-middle text-center">
-                        <button
-                          type="button"
-                          class="btn btn-warning btn-sm"
-                          @click="fetchStaff(staff)"
-                        >
-                          <i class="fa-solid fa-pen-to-square"></i>
-                        </button>
-                        <button
-                          type="button"
-                          class="btn btn-success btn-sm"
-                          @click="toggleActive(staff)"
-                          v-if="staff.is_active === true"
-                        >
-                          <i class="fa-solid fa-circle-check"></i>
-                        </button>
-                        <button
-                          type="button"
-                          class="btn btn-danger btn-sm"
-                          @click="toggleActive(staff)"
-                          v-else-if="staff.is_active === false"
-                        >
-                          <i class="fa-solid fa-circle-xmark"></i>
-                        </button>
-                      </td>
+                      <th class="text-center">Order</th>
+                      <th class="text-center">Photo</th>
+                      <th class="text-center">Name</th>
+                      <th class="text-center">Position/Designation</th>
+                      <th class="text-center">Division</th>
+                      <th class="text-center">Status</th>
+                      <th class="text-center">Action</th>
                     </tr>
-                  </template>
-                </draggable>
-              </table>
+                  </thead>
+                  <draggable
+                    v-model="StaffLists"
+                    item-key="id"
+                    tag="tbody"
+                    @end="onDragEnd"
+                    handle=".drag-handle"
+                  >
+                    <template #item="{ element: staff, index }">
+                      <tr>
+                        <td
+                          class="drag-handle text-center align-middle"
+                          style="cursor: grab"
+                        >
+                          <i class="fa-solid fa-bars"></i>
+                        </td>
+                        <td class="align-middle text-center">
+                          <img
+                            :src="`${staff.photo}`"
+                            alt=""
+                            v-if="staff.photo"
+                            width="100"
+                          />
+                          <img
+                            src="/img/capiz-logo.png"
+                            alt=""
+                            width="100"
+                            v-else
+                          />
+                        </td>
+                        <td class="align-middle uppercase">
+                          <strong>{{ staff.name }}</strong>
+                        </td>
+                        <td class="align-middle uppercase">
+                          <p class="mb-0">
+                            <strong>{{ staff.position }}</strong>
+                          </p>
+                          <p class="mb-0" v-if="staff.designation">
+                            ({{ staff.designation }})
+                          </p>
+                          <p class="mb-0" v-else></p>
+                        </td>
+                        <td class="align-middle text-center">
+                          {{ staff.divisions?.name }}
+                        </td>
+                        <td class="align-middle text-center">
+                          <span
+                            class="badge text-bg-success"
+                            v-if="staff.is_active === true"
+                            >Active</span
+                          >
+                          <span
+                            class="badge text-bg-danger"
+                            v-if="staff.is_active === false"
+                            >Inactive</span
+                          >
+                        </td>
+                        <td class="align-middle text-center">
+                          <button
+                            type="button"
+                            class="btn btn-warning btn-sm"
+                            @click="fetchStaff(staff)"
+                          >
+                            <i class="fa-solid fa-pen-to-square"></i>
+                          </button>
+                          <button
+                            type="button"
+                            class="btn btn-success btn-sm"
+                            @click="toggleActive(staff)"
+                            v-if="staff.is_active === true"
+                          >
+                            <i class="fa-solid fa-circle-check"></i>
+                          </button>
+                          <button
+                            type="button"
+                            class="btn btn-danger btn-sm"
+                            @click="toggleActive(staff)"
+                            v-else-if="staff.is_active === false"
+                          >
+                            <i class="fa-solid fa-circle-xmark"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </template>
+                  </draggable>
+                </table>
+              </div>
             </div>
           </div>
         </div>

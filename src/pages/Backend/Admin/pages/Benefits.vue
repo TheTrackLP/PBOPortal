@@ -1,6 +1,6 @@
 <script setup>
 import { supabase } from "@/lib/supabase";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import Swal from "sweetalert2";
 
 const topicLists = ref([]);
@@ -108,6 +108,27 @@ async function fetchTopicData(row) {
   topicFormMode.value = "edit";
 }
 
+async function editIssuance(issuance) {
+  const { data, error } = await supabase
+    .from("legal_issuances")
+    .select("*")
+    .eq("id", issuance.id)
+    .single();
+
+  if (error) {
+    const resultError = await Swal.fire({
+      title: "Error!",
+      text: "Error, Try Again!",
+      icon: "success",
+      timer: 5000,
+      showConfirmButton: false,
+    });
+  }
+
+  issuanceForm.value = data;
+  issuanceFormMode.value = "edit";
+}
+
 async function fetchDatas() {
   const { data: topics, error } = await supabase
     .from("benefit_topics")
@@ -172,8 +193,59 @@ async function submitIssuance() {
       drive_link: "",
     };
   } else {
+    issuanceFormMode.value = "edit";
+    const { data, error } = await supabase
+      .from("legal_issuances")
+      .update({
+        topic_id: issuanceForm.value.topic_id,
+        title: issuanceForm.value.title,
+        description: issuanceForm.value.description,
+        issued_date: issuanceForm.value.issued_date || null,
+        drive_link: final,
+      })
+      .eq("id", issuanceForm.value.id);
+
+    if (error) {
+      const resultError = await Swal.fire({
+        title: "Error!",
+        text: error.message,
+        icon: "success",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    }
+
+    const resultSuccess = await Swal.fire({
+      title: "Success!",
+      text: "Issuance has been successfully Update",
+      icon: "success",
+      timer: 1000,
+      showConfirmButton: false,
+    });
+
+    issuanceFormMode.value = "create";
+    issuanceForm.value = {
+      topic_id: "",
+      title: "",
+      description: "",
+      issued_date: "",
+      drive_link: "",
+    };
   }
 }
+
+const filterSearch = ref("");
+
+const filteredTopics = computed(() => {
+  const query = filterSearch.value.toLowerCase().trim();
+  if (!query) {
+    return topicLists.value;
+  } else {
+    return topicLists.value.filter((item) => {
+      return item.title.toLowerCase().includes(query);
+    });
+  }
+});
 </script>
 
 <style>
@@ -303,7 +375,13 @@ async function submitIssuance() {
             </div>
             <div class="card-footer">
               <button type="submit" class="btn btn-success px-5 m-2 float-end">
-                Save Changes
+                {{
+                  issuanceForm.processing
+                    ? "Saving..."
+                    : issuanceFormMode === "create"
+                      ? "Add"
+                      : "Save Changes"
+                }}
               </button>
             </div>
           </div>
@@ -312,9 +390,21 @@ async function submitIssuance() {
     </div>
 
     <hr />
+    <div class="container">
+      <input
+        type="text"
+        v-model="filterSearch"
+        class="form-control mb-4"
+        placeholder="Search a Benefit"
+      />
+    </div>
 
     <div class="row">
-      <div class="col-md-4 mb-3" v-for="topic in topicLists" :key="topic.id">
+      <div
+        class="col-md-4 mb-3"
+        v-for="topic in filteredTopics"
+        :key="topic.id"
+      >
         <div class="accordion" :id="'accordionTopic' + topic.id">
           <div class="accordion-item">
             <h2 class="accordion-header d-flex align-items-center">
@@ -369,7 +459,13 @@ async function submitIssuance() {
                   <p class="small text-muted mb-1">
                     {{ issuance.description }}
                   </p>
-                  <small class="d-block mb-1">{{ issuance.issued_date }}</small>
+                  <small class="d-block mb-1" v-if="issuance.issued_date">{{
+                    new Date(issuance.issued_date).toLocaleDateString("en-us", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })
+                  }}</small>
                   <a :href="issuance.drive_link" target="_blank" class="small">
                     <i class="bi bi-file-earmark-pdf"></i> View Document
                   </a>
