@@ -99,6 +99,27 @@ async function submitContactUs() {
     contactMode.value = true;
     successMsg.value = "";
     errorMsg.value = "";
+
+    if(!selectedImage.value){
+      const { error } = await supabase
+      .from("settings")
+      .update({
+        name: formContactUs.value.name,
+        address: formContactUs.value.address,
+        contact: formContactUs.value.contact,
+        email: formContactUs.value.email,
+        map_url: formContactUs.value.map_url,
+      })
+      .eq("id", formContactUs.value.id);
+      
+      successMsg.value = "Contact Info Updated Successfully";
+      
+      if (error) {
+        errorMsg.value = error.message;
+      }
+
+      contactMode.value = false;
+    }
     const fileName = `${selectedImage.value.name}`;
 
     const { error: uploadError } = await supabase.storage
