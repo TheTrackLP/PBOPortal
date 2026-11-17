@@ -11,6 +11,8 @@ const formContactUs = ref({
   contact: "",
   email: "",
   map_url: "",
+  working_days: '',
+  working_hours: '',
 });
 
 onMounted(async () => {
@@ -29,6 +31,8 @@ onMounted(async () => {
       contact: check.contact ?? "",
       email: check.email ?? "",
       map_url: check.map_url ?? "",
+      working_days: check.working_days ?? "",
+      working_hours: check.working_hours ?? "",
       photo: check.photo ?? "",
     };
   }
@@ -86,6 +90,8 @@ async function submitContactUs() {
       email: formContactUs.value.email,
       photo: publicUrl,
       map_url: formContactUs.value.map_url,
+      working_days: formContactUs.value.working_days,
+      working_hours: formContactUs.value.working_hours,
     });
 
     successMsg.value = "Contact Info Added Successfully";
@@ -109,6 +115,8 @@ async function submitContactUs() {
         contact: formContactUs.value.contact,
         email: formContactUs.value.email,
         map_url: formContactUs.value.map_url,
+        working_days: formContactUs.value.working_days,
+        working_hours: formContactUs.value.working_hours,
       })
       .eq("id", formContactUs.value.id);
       
@@ -152,6 +160,8 @@ async function submitContactUs() {
         email: formContactUs.value.email,
         photo: publicUrl,
         map_url: formContactUs.value.map_url,
+        working_days: formContactUs.value.working_days,
+        working_hours: formContactUs.value.working_hours,
       })
       .eq("id", formContactUs.value.id);
 
@@ -233,6 +243,22 @@ async function submitContactUs() {
                   type="email"
                   class="form-control"
                   v-model="formContactUs.email"
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Working Days</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="formContactUs.working_days"
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Working Hours</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="formContactUs.working_hours"
                 />
               </div>
             </div>

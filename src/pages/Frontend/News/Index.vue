@@ -8,7 +8,7 @@ onMounted(async () => {
   const { data } = await supabase
     .from("news")
     .select("*")
-    .order("published_date", { ascending: false })
+    .order("published_date", { ascending: true })
     .eq("is_published", true);
   newsLists.value = data;
 });

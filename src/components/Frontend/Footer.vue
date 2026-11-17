@@ -39,8 +39,12 @@ const officeSettings = inject("officeSettings");
         </div>
         <div class="col-md-4">
           <h6 class="font-display mb-3">Office Hours</h6>
-          <p class="text-muted-light mb-0">Monday – Friday</p>
-          <p class="text-muted-light mb-0">8:00 AM – 5:00 PM</p>
+          <p class="text-muted-light mb-0">
+            {{ officeSettings?.working_days }}
+          </p>
+          <p class="text-muted-light mb-0">
+            {{ officeSettings?.working_hours }}
+          </p>
         </div>
       </div>
     </div>

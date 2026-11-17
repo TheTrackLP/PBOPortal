@@ -1,6 +1,8 @@
 <script setup>
 import { supabase } from "@/lib/supabase";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, inject } from "vue";
+
+const officeSettings = inject("officeSettings");
 
 const fetchAbout = ref(null);
 const fetchAccomplishList = ref([]);
@@ -44,7 +46,7 @@ onMounted(async () => {
     .from("news")
     .select("*")
     .limit(3)
-    .order("published_date", { ascending: false })
+    .order("published_date", { ascending: true })
     .eq("is_published", true);
   fetchNews.value = news;
 });
@@ -314,9 +316,14 @@ img {
     >
       <div>
         <h5 class="fw-bold mb-0">Need assistance from our office?</h5>
-        <div class="small">We're here Monday to Friday, 8:00 AM – 5:00 PM.</div>
+        <div class="small">
+          We're here {{ officeSettings?.working_days }},
+          {{ officeSettings?.working_hours }}
+        </div>
       </div>
-      <a href="#" class="btn btn-dark px-4">Get in Touch</a>
+      <router-link to="/contactus" class="btn btn-dark px-4"
+        >Get in Touch</router-link
+      >
     </div>
   </section>
 </template>
