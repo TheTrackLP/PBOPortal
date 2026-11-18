@@ -122,38 +122,35 @@ const router = createRouter({
   },
 });
 
-router.beforeEach(async (to, from, next) => {
-  if (to.name === "AdminLogin") {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (session) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", session.user.id)
-        .single();
-      return profile?.role === "admin"
-        ? { name: "AdminDashboard" }
-        : { name: "Home" };
-    }
-  }
-  if (to.meta.requiresAuth) {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (!session) {
-      return { name: "AdminLogin" };
-    }
+router.beforeEach(async (to) => {
+  const needsAuth = to.meta.requiresAuth;
+  const isLogin = to.name === "AdminLogin";
+  if (!needsAuth && !isLogin) return; // public pages: allow
 
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", session.user.id)
-      .single();
-    if (profile?.role !== "admin") {
-      return { name: "Home" };
-    }
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  // Not logged in
+  if (!session) {
+    return needsAuth ? { name: "Home" } : undefined;
+  }
+
+  // Logged in: check role
+  const { data: profile, error } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", session.user.id)
+    .maybeSingle();
+
+  const isAdmin = profile?.role === "admin";
+
+  if (isLogin) {
+    return isAdmin ? { name: "AdminDashboard" } : undefined; // non-admin may see login page
+  }
+
+  if (needsAuth && !isAdmin) {
+    return { name: "Home" };
   }
 });
 
