@@ -123,14 +123,38 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  if (to.meta.requiresAuth) {
-    const { data } = await supabase.auth.getSession();
-    if (!data.session) {
-      next({ name: "AdminLogin" });
-      return;
+  if (to.name === "AdminLogin") {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (session) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", session.user.id)
+        .single();
+      return profile?.role === "admin"
+        ? { name: "AdminDashboard" }
+        : { name: "Home" };
     }
   }
-  next();
+  if (to.meta.requiresAuth) {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (!session) {
+      return { name: "AdminLogin" };
+    }
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", session.user.id)
+      .single();
+    if (profile?.role !== "admin") {
+      return { name: "Home" };
+    }
+  }
 });
 
 export default router;

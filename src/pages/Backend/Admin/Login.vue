@@ -25,7 +25,18 @@ async function handleLogin() {
     return;
   }
 
-  router.push({ name: "AdminDashboard" });
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", data.user.id)
+    .single();
+
+  if (profile?.role === "admin") {
+    router.push({ name: "AdminDashboard" });
+  } else {
+    await supabase.auth.signOut();
+    router.push({ name: "Home" });
+  }
 }
 </script>
 
